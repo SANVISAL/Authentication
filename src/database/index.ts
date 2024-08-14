@@ -5,11 +5,11 @@ const config = getConfig();
 const AppDataSource = new DataSource({
   name: "default",
   type: "postgres",
-  host: config.host, //"localhost",
-  port: parseInt(config.dbport || "7000", 10), //7000,
+  host: config.host,
+  port: parseInt(config.dbport || "7000", 10),
   username: "postgres",
-  password: config.password, //"sanvisal2302"
-  database: config.database, //"Users",
+  password: config.password,
+  database: config.database,
   entities: [User],
   synchronize: true,
 });
