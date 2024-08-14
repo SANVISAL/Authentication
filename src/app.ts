@@ -10,6 +10,7 @@ import { logger } from "./utils/logger";
 import { ErrorResponse } from "./utils/response";
 import { exceptionHandler } from "./middlewares/exception-handler";
 
+
 const app: Application = express();
 const config = getConfig();
 

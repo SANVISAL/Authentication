@@ -1,6 +1,6 @@
 import app from "./app";
+import AppDataSource from "./database";
 import { getConfig } from "./utils/cofig";
-
 import { logger, logInit } from "./utils/logger";
 
 async function run() {
@@ -13,7 +13,10 @@ async function run() {
     logInit({ env: currentEnv, logLevel: config.logLevel });
     logger.info(`SCM server has started with process id ${process.pid}`);
 
-    // active server mongodb
+    // Initialize PostgreSQL connection using TypeORM DataSource
+    await AppDataSource.initialize();
+    logger.info("PostgreSQL connected successfully!");
+
 
     // Start server
     const server = app.listen(config.port, () => {
@@ -23,10 +26,12 @@ async function run() {
     // Exit handler to gracefully shut down the server
     const exitHandler = async () => {
       if (server) {
-        server.close(() => {
+        server.close(async () => {
           logger.info("Server closed!");
-          // Add any other cleanup code here, like disconnecting from a database
-          logger.info("Mongodb disconnected!");
+          //disconnecting from a database
+          await AppDataSource.destroy();
+          logger.info("Postgres disconnected!");
+
           process.exit(1);
         });
       } else {
@@ -49,8 +54,12 @@ async function run() {
       logger.info("SIGTERM received");
       if (server) {
         // Stop the server from accepting new requests but keep existing connections open until all ongoing requests are done
-        server.close(() => {
+        server.close(async () => {
           logger.info("Server closed due to SIGTERM");
+
+          await AppDataSource.destroy();
+          logger.info("PostgreSQL disconnected!");
+
           process.exit(0);
         });
       } else {
@@ -58,7 +67,13 @@ async function run() {
       }
     });
   } catch (error: unknown) {
+    console.log("error connection: =:",error)
     logger.error("SCM Server failed!", { error });
+
+    if (AppDataSource.isInitialized) {
+      await AppDataSource.destroy();
+      logger.info("PostgreSQL disconnected!");
+    }
     process.exit(1);
   }
 }

@@ -1,19 +1,27 @@
 import path from "path";
 import dotenv from "dotenv";
-import { HttpException } from "./http-exception";
-import { StatusCode } from "./consts";
+import { logger } from "./logger";
 
 function createConfig(configPath: string) {
   dotenv.config({ path: configPath });
 
   // Validate essential configuration
-  const requiredConfig = ["NODE_ENV", "PORT", "LOG_LEVEL"];
+  const requiredConfig = [
+    "NODE_ENV",
+    "PORT",
+    "LOG_LEVEL",
+    "DB_PORT",
+    "USERNAME",
+    "PASSWORD",
+    "TYPE",
+    "DATABASE_NAME",
+    "HOST",
+  ];
   const missingConfig = requiredConfig.filter((key) => !process.env[key]);
 
   if (missingConfig.length > 0) {
-    throw new HttpException(
-      `Missing required environment variables: ${missingConfig.join(", ")}`,
-      StatusCode.InternalServerError
+    logger.info(
+      `Missing required environment variables: ${missingConfig.join(", ")}`
     );
   }
 
@@ -22,6 +30,12 @@ function createConfig(configPath: string) {
     env: process.env.NODE_ENV,
     port: process.env.PORT,
     logLevel: process.env.LOG_LEVEL,
+    dbport: process.env.DB_PORT,
+    type: process.env.TYPE,
+    username: process.env.USERNAME,
+    password: process.env.PASSWORD,
+    database: process.env.DATABASE_NAME,
+    host: process.env.HOST,
   };
 }
 
