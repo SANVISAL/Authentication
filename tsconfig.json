@@ -1,10 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2015",
-    "lib": [
-      "dom",
-      "ES2015"
-    ],
+    "lib": ["dom", "ES2015"],
     "module": "commonjs",
     "baseUrl": ".",
     "outDir": "./build",
@@ -31,14 +28,18 @@
       {
         "transform": "typescript-transform-paths",
         "afterDeclarations": true
-      },
+      }
     ],
     "paths": {
-      "@project_name/*": [
-        "src/*"
+      "@CRUD_PG/*": ["src/*"],
+      "tsoa": [
+        "node_modules/tsoa/dist"
+      ],
+      "tsoa/": [
+        "node_modules/tsoa/dist/"
       ]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "src/utils/@types/logger.type/ts"],
+  "include": ["src/**/*.ts", "test/**/*.ts", "src/utils/@types/logger.type/ts", "src/views/indexts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }

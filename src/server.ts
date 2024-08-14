@@ -1,6 +1,6 @@
 import app from "./app";
-import MongoDBConnector from "./database";
-import { getConfig } from "./utils/configs";
+import { getConfig } from "./utils/cofig";
+
 import { logger, logInit } from "./utils/logger";
 
 async function run() {
@@ -14,8 +14,6 @@ async function run() {
     logger.info(`SCM server has started with process id ${process.pid}`);
 
     // active server mongodb
-    const mongodb = MongoDBConnector.getInstance();
-    await mongodb.connect({ url: config.mongoUrl! });
 
     // Start server
     const server = app.listen(config.port, () => {
