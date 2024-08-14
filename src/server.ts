@@ -17,6 +17,7 @@ async function run() {
     await AppDataSource.initialize();
     logger.info("PostgreSQL connected successfully!");
 
+
     // Start server
     const server = app.listen(config.port, () => {
       logger.info(`Server is running on port ${config.port}`);

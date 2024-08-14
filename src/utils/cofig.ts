@@ -44,8 +44,8 @@ export function getConfig(currentEnv: string = "development") {
     __dirname,
     currentEnv === "development"
       ? "../../configs/.env"
-      : currentEnv === "staging"
-      ? "../../configs/.env.staging"
+      : currentEnv === "uat"
+      ? "../../configs/.env.uat"
       : currentEnv === "production"
       ? "../../configs/.env.production"
       : "../../configs/.env.test"
