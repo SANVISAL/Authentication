@@ -9,7 +9,8 @@ import { StatusCode } from "./utils/consts";
 import { logger } from "./utils/logger";
 import { ErrorResponse } from "./utils/response";
 import { exceptionHandler } from "./middlewares/exception-handler";
-
+import swaggerUi from "swagger-ui-express";
+import path from "path";
 
 const app: Application = express();
 const config = getConfig();
@@ -70,9 +71,22 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // api routes
-// app.use(Routes.BASE, authRouter);
-// app.use(Routes.BASE, heathRouter);
 
+// Serve the Swagger UI
+app.use(
+  "/swagger",
+  swaggerUi.serve,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: "/swagger.json", // Point to the generated Swagger JSON file
+    },
+  })
+);
+
+// Serve the generated Swagger JSON file
+app.get("/swagger.json", (_req, res) => {
+  res.sendFile(path.join(__dirname, "./swagger-dist/swagger.json"));
+});
 // Catching invalid routes
 app.use("*", (req: Request, res: Response, _next: NextFunction) => {
   const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;
