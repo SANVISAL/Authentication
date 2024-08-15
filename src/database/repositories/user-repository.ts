@@ -1,11 +1,12 @@
 import { Repository } from "typeorm";
-import User from "../enities/model-user";
+import User from "../enities/user.entity";
 import { AppDataSource } from "../data-source";
 import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { StatusCode } from "@CRUD_PG/utils/consts";
-import { UserCreate, UserName } from "./@types/user-type-repo";
+import { IRepository } from "./@types/user-repository.type";
+import { IUser, IUserResponse } from "@CRUD_PG/@types/user.type";
 
-export class UserRepository {
+export class UserRepository implements IRepository {
   private _repository: Repository<User>;
   private readonly _appDataSource: AppDataSource;
   public constructor() {
@@ -13,7 +14,7 @@ export class UserRepository {
     this._repository = this._appDataSource.getRepository(User);
   }
 
-  findOne(id: number) {
+  public async findOne(id: number): Promise<IUserResponse | null> {
     try {
       const user = this._repository.findOne({
         where: [
@@ -30,17 +31,20 @@ export class UserRepository {
       if (error instanceof HttpException) {
         throw error;
       }
+      throw new HttpException(
+        "Unexpected error accurred.",
+        StatusCode.InternalServerError
+      );
     }
   }
-  createUser(user: UserCreate) {
+  public async create(user: IUser): Promise<IUserResponse> {
     try {
-      const userCreate = this._repository.create(user);
-      const saveUser = this._repository.save(userCreate);
-      if (!saveUser) {
+      const createdUser = this._repository.create(user);
+      const savedUser = await this._repository.save(createdUser);
+      if (!savedUser) {
         throw new HttpException("Failed to save user", StatusCode.BadRequest);
-      } else {
-        return saveUser;
       }
+      return savedUser;
     } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
@@ -51,16 +55,27 @@ export class UserRepository {
       );
     }
   }
-  findAllUsers() {
+  public async findAll(): Promise<IUserResponse[]> {
     try {
-      const allUsers = this._repository.find();
-      return allUsers;
+      const users = await this._repository.find();
+
+      if (users.length === 0) {
+        throw new HttpException("Users not found.", StatusCode.NotFound);
+      }
+
+      return users;
     } catch (error) {
-      throw error;
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException(
+        "An unexpected error occurred",
+        StatusCode.InternalServerError
+      );
     }
   }
 
-  findUserByName(user: UserName) {
+  findUserByName(user: IUser) {
     try {
       const foundUser = this._repository.findOne({
         where: { firstName: user.firstName, lastName: user.lastName },

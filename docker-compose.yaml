@@ -7,7 +7,7 @@ services:
     environment:
       POSTGRES_USER: user_sample
       POSTGRES_PASSWORD: user@pass
-      POSTGRES_DB: user_sample
+      POSTGRES_DB: mydatabase
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:

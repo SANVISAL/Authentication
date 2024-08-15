@@ -11,8 +11,10 @@ import { ErrorResponse } from "./utils/response";
 import { exceptionHandler } from "./middlewares/exception-handler";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
-import { ROUTE_PATH } from "./routes/route-refer";
+import { ROUTE_PATH } from "./routes";
 import route from "./routes/v1/route";
+import { ipWhitelist } from "./middlewares/ip-whitelist";
+import { authenticate } from "./middlewares/authenticate";
 
 const app: Application = express();
 const config = getConfig();
@@ -47,10 +49,10 @@ app.use(
 );
 
 // IP Address protector
-// app.use(ipWhitelist(["::1", "::ffff:127.0.0.1"]));
+app.use(ipWhitelist(["::1", "::ffff:127.0.0.1"]));
 
 // authenticate API keys
-// app.use(authenticate);
+app.use(authenticate);
 
 // Logging: Log HTTP requests
 app.use(morgan("combined"));
