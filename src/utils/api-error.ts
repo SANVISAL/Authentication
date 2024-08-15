@@ -1,9 +1,10 @@
+import { StatusCode } from "./consts";
 import { HttpException } from "./http-exception";
 
 export class ApiError extends HttpException {
   public constructor(
-    message: string = "Unexpected erorr accurred.",
-    statusCode: number
+    message: string = "Unexpected error accurred.",
+    statusCode: number = StatusCode.InternalServerError
   ) {
     super(message, statusCode);
 

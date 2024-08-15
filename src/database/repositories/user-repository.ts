@@ -5,6 +5,7 @@ import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { StatusCode } from "@CRUD_PG/utils/consts";
 import { IRepository } from "./@types/user-repository.type";
 import { IUser, IUserResponse } from "@CRUD_PG/@types/user.type";
+import { ApiError } from "@CRUD_PG/utils/api-error";
 
 export class UserRepository implements IRepository {
   private _repository: Repository<User>;
@@ -31,10 +32,7 @@ export class UserRepository implements IRepository {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException(
-        "Unexpected error accurred.",
-        StatusCode.InternalServerError
-      );
+      throw new ApiError();
     }
   }
   public async create(user: IUser): Promise<IUserResponse> {
@@ -42,25 +40,24 @@ export class UserRepository implements IRepository {
       const createdUser = this._repository.create(user);
       const savedUser = await this._repository.save(createdUser);
       if (!savedUser) {
-        throw new HttpException("Failed to save user", StatusCode.BadRequest);
+        throw new HttpException(
+          "Could not create user.",
+          StatusCode.BadRequest
+        );
       }
       return savedUser;
     } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException(
-        "An unexpected error occurred",
-        StatusCode.InternalServerError
-      );
+      throw new ApiError();
     }
   }
   public async findAll(): Promise<IUserResponse[]> {
     try {
       const users = await this._repository.find();
-
       if (users.length === 0) {
-        throw new HttpException("Users not found.", StatusCode.NotFound);
+        throw new HttpException("No users found", StatusCode.NotFound);
       }
 
       return users;
@@ -68,21 +65,48 @@ export class UserRepository implements IRepository {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException(
-        "An unexpected error occurred",
-        StatusCode.InternalServerError
-      );
+      throw new ApiError();
+    }
+  }
+  async delete(id: number): Promise<void> {
+    try {
+      const deletedUser = await this._repository.delete(id);
+      if (deletedUser.affected === 0) {
+        throw new HttpException("No user found", StatusCode.NotFound);
+      }
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new ApiError();
     }
   }
 
-  findUserByName(user: IUser) {
+  async update(id: number, updateUser: Partial<IUser>): Promise<IUserResponse> {
     try {
-      const foundUser = this._repository.findOne({
+      const updatedUser = await this._repository.update(id, updateUser);
+      if (updatedUser.affected === 0) {
+        throw new HttpException("Could not update user.", StatusCode.NotFound);
+      }
+
+      const user = await this.findOne(id);
+
+      return user as IUserResponse;
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new ApiError();
+    }
+  }
+
+  async findUserByFullName(user: IUser) {
+    try {
+      const foundUser = await this._repository.findOne({
         where: { firstName: user.firstName, lastName: user.lastName },
       });
       return foundUser || null;
     } catch (error) {
-      console.log(error);
       throw error;
     }
   }

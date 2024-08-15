@@ -11,10 +11,9 @@ import { ErrorResponse } from "./utils/response";
 import { exceptionHandler } from "./middlewares/exception-handler";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
-import { ROUTE_PATH } from "./routes";
-import route from "./routes/v1/route";
 import { ipWhitelist } from "./middlewares/ip-whitelist";
-import { authenticate } from "./middlewares/authenticate";
+// import { authenticate } from "./middlewares/authenticate";
+import { RegisterRoutes } from "./routes/v1/routes";
 
 const app: Application = express();
 const config = getConfig();
@@ -52,7 +51,7 @@ app.use(
 app.use(ipWhitelist(["::1", "::ffff:127.0.0.1"]));
 
 // authenticate API keys
-app.use(authenticate);
+// app.use(authenticate);
 
 // Logging: Log HTTP requests
 app.use(morgan("combined"));
@@ -75,10 +74,11 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // api routes
-app.use(ROUTE_PATH.BASE_PATH, route);
+RegisterRoutes(app);
+
 // Serve the Swagger UI
 app.use(
-  "/swagger",
+  "/docs",
   swaggerUi.serve,
   swaggerUi.setup(undefined, {
     swaggerOptions: {
@@ -89,7 +89,7 @@ app.use(
 
 // Serve the generated Swagger JSON file
 app.get("/swagger.json", (_req, res) => {
-  res.sendFile(path.join(__dirname, "./swagger-dist/swagger.json"));
+  res.sendFile(path.join(__dirname, "../public/swagger.json"));
 });
 // Catching invalid routes
 app.use("*", (req: Request, res: Response, _next: NextFunction) => {

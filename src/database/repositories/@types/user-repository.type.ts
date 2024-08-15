@@ -14,6 +14,6 @@ export interface IRepository {
   findOne(id: number): Promise<IUserResponse | null>;
   findAll(): Promise<IUserResponse[]>;
   create(user: IUser): Promise<IUserResponse>;
-  // update(id: number, user: IUser): Promise<IUserResponse>;
-  // delete(id: number): Promise<void>;
+  update(id: number, user: Partial<IUser>): Promise<IUserResponse>;
+  delete(id: number): Promise<void>;
 }
