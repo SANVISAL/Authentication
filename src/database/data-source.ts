@@ -1,7 +1,7 @@
 import { DataSource, EntityTarget, Repository, ObjectLiteral } from "typeorm";
 import { logger } from "@CRUD_PG/utils/logger";
 import { getConfig } from "@CRUD_PG/utils/cofig";
-import User from "./enities/model-user";
+import User from "./enities/user.entity";
 
 const config = getConfig();
 
