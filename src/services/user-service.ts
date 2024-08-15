@@ -48,8 +48,8 @@ class UserService {
   }
   async deleteUser(id: number) {
     try {
-      const userId = await this._userRepository.findOne(id);
-      if (!userId) {
+      const existingUser = await this._userRepository.findOne(id);
+      if (!existingUser) {
         throw new HttpException("User not found", StatusCode.NotFound);
       }
       const deletedUser = await this._userRepository.deleteUser(id);
@@ -74,9 +74,6 @@ class UserService {
         firstName: user.firstName,
         lastName: user.lastName,
       };
-      // user.firstName = exsitedUser.firstName;
-      // user.lastName = exsitedUser.lastName;
-
       const updatedUser = await this._userRepository.updateUser(
         exsitedUser.id,
         userDetails
