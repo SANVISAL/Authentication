@@ -1,97 +1,101 @@
-import { IUser } from "@CRUD_PG/@types/user.type";
+import { IUser, IUserResponse } from "@CRUD_PG/@types/user.type";
 import { UserRepository } from "@CRUD_PG/database/repositories/user-repository";
+import { ApiError } from "@CRUD_PG/utils/api-error";
 import { StatusCode } from "@CRUD_PG/utils/consts";
 import { HttpException } from "@CRUD_PG/utils/http-exception";
+import { IUserService } from "./@types/user-service.type";
+import { SuccessResponse } from "@CRUD_PG/utils/response";
+import { GenericResponse } from "@CRUD_PG/controllers/@types/controller.type";
 
-class UserService {
+export class UserService implements IUserService {
   private _userRepository: UserRepository;
   constructor() {
     this._userRepository = new UserRepository();
   }
 
-  async createUser(user: IUser) {
+  public async getUser(id: number): Promise<SuccessResponse<GenericResponse>> {
+    try {
+      const user = await this._userRepository.findOne(id);
+
+      return new SuccessResponse("200", "OK", {
+        data: user as IUserResponse,
+      });
+    } catch (error: unknown) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new ApiError();
+    }
+  }
+
+  public async createUser(
+    user: IUser
+  ): Promise<SuccessResponse<GenericResponse>> {
     try {
       const existingUser = await this._userRepository.findUserByFullName(user);
       if (existingUser) {
         throw new HttpException("User already exists", StatusCode.Conflict);
-      } else {
-        const createdUser = this._userRepository.createUser(user);
-        return createdUser;
       }
+
+      const createdUser = await this._userRepository.create(user);
+      return new SuccessResponse("200", "OK", {
+        data: createdUser as IUserResponse,
+      });
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException(
-        "occurred error creating user",
-        StatusCode.InternalServerError
-      );
+      throw new ApiError();
     }
   }
 
-  async getAllUsers() {
+  public async getAllUsers(): Promise<
+    SuccessResponse<{ data: IUserResponse[] }>
+  > {
     try {
-      const user = await this._userRepository.findAllUsers();
-      if (user.length === 0) {
-        throw new HttpException("No user found", StatusCode.NotFound);
-      }
-      return user;
+      const users = await this._userRepository.findAll();
+      return new SuccessResponse("200", "OK", {
+        data: users as IUserResponse[],
+      });
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException(
-        "Faile to get user!",
-        StatusCode.InternalServerError
-      );
+      throw new ApiError();
     }
   }
-  async deleteUser(id: number) {
+  public async deleteUser(id: number): Promise<SuccessResponse<null>> {
     try {
-      const userId = await this._userRepository.findOne(id);
-      if (!userId) {
-        throw new HttpException("User not found", StatusCode.NotFound);
-      }
-      const deletedUser = await this._userRepository.deleteUser(id);
-      return deletedUser;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        "Failed to delete user",
-        StatusCode.InternalServerError
-      );
-    }
-  }
-  async updateUser(id: number, user: IUser) {
-    try {
-      const exsitedUser = await this._userRepository.findOne(id);
-      if (!exsitedUser) {
-        throw new HttpException("User not found", StatusCode.NotFound);
-      }
-      const userDetails = {
-        firstName: user.firstName,
-        lastName: user.lastName,
-      };
-      // user.firstName = exsitedUser.firstName;
-      // user.lastName = exsitedUser.lastName;
+      // check if user exist
+      await this._userRepository.findOne(id);
 
-      const updatedUser = await this._userRepository.updateUser(
-        exsitedUser.id,
-        userDetails
-      );
-      return updatedUser;
+      await this._userRepository.delete(id);
+
+      return new SuccessResponse("200", "OK", null);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new HttpException(
-        "Failed to update user",
-        StatusCode.InternalServerError
-      );
+      throw new ApiError();
+    }
+  }
+  public async updateUser(
+    id: number,
+    user: Partial<IUser>
+  ): Promise<SuccessResponse<GenericResponse>> {
+    try {
+      // check if user exist
+      await this._userRepository.findOne(id);
+
+      const updatedUser = await this._userRepository.update(id, user);
+      return new SuccessResponse("200", "OK", {
+        data: updatedUser as IUserResponse,
+      });
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new ApiError();
     }
   }
 }
-
-export default UserService;

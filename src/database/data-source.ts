@@ -3,21 +3,20 @@ import { logger } from "@CRUD_PG/utils/logger";
 import { getConfig } from "@CRUD_PG/utils/cofig";
 import User from "./enities/user.entity";
 
-const config = getConfig();
-
 export class AppDataSource {
   private static _instance: AppDataSource;
   private readonly _dataSource: DataSource;
+  private readonly _config = getConfig();
 
   private constructor() {
     this._dataSource = new DataSource({
       name: "default",
       type: "postgres",
-      host: config.host,
-      port: parseInt(config.dbport || "7000", 10),
-      username: "postgres",
-      password: config.password,
-      database: config.database,
+      host: this._config.host,
+      port: parseInt(this._config.dbport || "7000", 10),
+      username: this._config.username,
+      password: this._config.password,
+      database: this._config.database,
       entities: [User],
       synchronize: true,
     });
