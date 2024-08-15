@@ -11,9 +11,12 @@ import {
   Path,
   SuccessResponse,
   Put,
+  Middlewares,
 } from "tsoa";
 import { ROUTE_PATH } from "@CRUD_PG/routes";
 import { ApiError } from "@CRUD_PG/utils/api-error";
+import { inputValidator } from "@CRUD_PG/middlewares/validate-input";
+import { UserSchema } from "@CRUD_PG/schemas/user.schema";
 
 @Route("/api/v1")
 export class UserController {
@@ -24,6 +27,7 @@ export class UserController {
   }
 
   @SuccessResponse(StatusCode.Created, "OK")
+  @Middlewares(inputValidator(UserSchema))
   @Post(ROUTE_PATH.CREATE_USER)
   public async createUser(@Body() user: IUser) {
     try {
@@ -88,6 +92,7 @@ export class UserController {
   }
 
   @Put(ROUTE_PATH.UPDATE_USER)
+  @Middlewares(inputValidator(UserSchema))
   public async updateUser(@Path() id: number, @Body() user: Partial<IUser>) {
     try {
       if (!id) {
