@@ -11,6 +11,8 @@ import { ErrorResponse } from "./utils/response";
 import { exceptionHandler } from "./middlewares/exception-handler";
 import swaggerUi from "swagger-ui-express";
 import path from "path";
+import { ROUTE_PATH } from "./routes/route-refer";
+import route from "./routes/v1/route";
 
 const app: Application = express();
 const config = getConfig();
@@ -71,7 +73,7 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 // api routes
-
+app.use(ROUTE_PATH.BASE_PATH, route);
 // Serve the Swagger UI
 app.use(
   "/swagger",
