@@ -16,7 +16,7 @@ import {
 import { ROUTE_PATH } from "@CRUD_PG/routes";
 import { ApiError } from "@CRUD_PG/utils/api-error";
 import { inputValidator } from "@CRUD_PG/middlewares/validate-input";
-import { UserSchema } from "@CRUD_PG/schemas/user.schema";
+import { userSchema, userUpdateSchema } from "@CRUD_PG/schemas/user.schema";
 
 @Route("/api/v1")
 export class UserController {
@@ -27,8 +27,8 @@ export class UserController {
   }
 
   @SuccessResponse(StatusCode.Created, "OK")
-  @Middlewares(inputValidator(UserSchema))
   @Post(ROUTE_PATH.CREATE_USER)
+  @Middlewares(inputValidator(userSchema))
   public async createUser(@Body() user: IUser) {
     try {
       const response = await this._userService.createUser(user);
@@ -43,7 +43,7 @@ export class UserController {
   }
 
   @Get(ROUTE_PATH.GET_USER)
-  public async getUser(id: number) {
+  public async getUser(@Path() id: string) {
     try {
       if (!id) {
         throw new HttpException("No id found.", StatusCode.OK);
@@ -75,7 +75,7 @@ export class UserController {
   }
 
   @Delete(ROUTE_PATH.DELETE_USER)
-  public async deleteUser(@Path() id: number) {
+  public async deleteUser(@Path() id: string) {
     try {
       if (!id) {
         throw new HttpException("No id found.", StatusCode.NotFound);
@@ -92,8 +92,8 @@ export class UserController {
   }
 
   @Put(ROUTE_PATH.UPDATE_USER)
-  @Middlewares(inputValidator(UserSchema))
-  public async updateUser(@Path() id: number, @Body() user: Partial<IUser>) {
+  @Middlewares(inputValidator(userUpdateSchema))
+  public async updateUser(@Path() id: string, @Body() user: Partial<IUser>) {
     try {
       if (!id) {
         throw new HttpException("No id found.", StatusCode.NotFound);

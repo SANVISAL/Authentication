@@ -5,15 +5,12 @@ export interface UserCreate extends Partial<User> {
   lastname: string;
 }
 
-export interface UserName extends Partial<User> {
-  firstname: string;
-  lastname: string;
-}
+export interface QueryParams extends Partial<IUser> {}
 
 export interface IRepository {
-  findOne(id: number): Promise<IUserResponse | null>;
+  findOne(id: string): Promise<IUserResponse | null>;
   findAll(): Promise<IUserResponse[]>;
   create(user: IUser): Promise<IUserResponse>;
-  update(id: number, user: Partial<IUser>): Promise<IUserResponse>;
-  delete(id: number): Promise<void>;
+  update(id: string, user: Partial<IUser>): Promise<IUserResponse>;
+  delete(id: string): Promise<void>;
 }

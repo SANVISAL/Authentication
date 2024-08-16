@@ -14,7 +14,8 @@
     "gen:all": "yarn gen:spec && yarn gen:routes",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/&& cp -R configs ./build/ && cp ecosystem.config.js ./build/",
     "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false",
-    "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map"
+    "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
     "compression": "^1.7.4",

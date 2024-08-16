@@ -9,5 +9,5 @@ export interface IUser {
 }
 
 export interface IUserResponse extends IUser {
-  id: number;
+  id: string;
 }
