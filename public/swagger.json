@@ -11,7 +11,8 @@
 				"enum": [
 					"male",
 					"female",
-					"other"
+					"other",
+					"unknown"
 				],
 				"type": "string"
 			},
@@ -33,8 +34,7 @@
 						"$ref": "#/components/schemas/Gender"
 					},
 					"id": {
-						"type": "number",
-						"format": "double"
+						"type": "string"
 					}
 				},
 				"required": [
@@ -294,8 +294,7 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				]
@@ -321,8 +320,7 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				]
@@ -348,8 +346,7 @@
 						"name": "id",
 						"required": true,
 						"schema": {
-							"format": "double",
-							"type": "number"
+							"type": "string"
 						}
 					}
 				],

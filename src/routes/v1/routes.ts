@@ -13,7 +13,7 @@ import type { Request as ExRequest, Response as ExResponse, RequestHandler, Rout
 const models: TsoaRoute.Models = {
     "Gender": {
         "dataType": "refEnum",
-        "enums": ["male","female","other"],
+        "enums": ["male","female","other","unknown"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IUserResponse": {
@@ -24,7 +24,7 @@ const models: TsoaRoute.Models = {
             "email": {"dataType":"string","required":true},
             "address": {"dataType":"string","required":true},
             "gender": {"ref":"Gender","required":true},
-            "id": {"dataType":"double","required":true},
+            "id": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -137,7 +137,7 @@ export function RegisterRoutes(app: Router) {
 
             async function UserController_getUser(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -196,7 +196,7 @@ export function RegisterRoutes(app: Router) {
 
             async function UserController_deleteUser(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -226,7 +226,7 @@ export function RegisterRoutes(app: Router) {
 
             async function UserController_updateUser(request: ExRequest, response: ExResponse, next: any) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
-                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"string"},
                     user: {"in":"body","name":"user","required":true,"ref":"Partial_IUser_"},
             };
 

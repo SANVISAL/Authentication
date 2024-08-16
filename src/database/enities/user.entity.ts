@@ -3,8 +3,8 @@ import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
+  @PrimaryGeneratedColumn("uuid")
+  id!: string;
 
   @Column({ type: "varchar", length: 50 })
   firstName: string = "";
@@ -12,17 +12,18 @@ class User {
   @Column({ type: "varchar", length: 50 })
   lastName: string = "";
 
-  @Column({ length: 50 })
+  @Column({ type: "varchar", length: 50, unique: true })
   email: string = "";
 
-  @Column()
+  @Column({ type: "varchar", length: 100, nullable: true })
   address: string = "";
 
   @Column({
     type: "enum",
     enum: Gender,
+    default: Gender.unknow,
   })
-  gender!: Gender;
+  gender: Gender = Gender.unknow;
 }
 
 export default User;
