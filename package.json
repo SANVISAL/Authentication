@@ -9,9 +9,13 @@
     "stop": "pm2 stop all",
     "restart": "pm2 restart ecosystem.config.js",
     "delete": "pm2 delete all",
+    "gen:spec": "tsoa spec",
+    "gen:routes": "tsoa routes",
+    "gen:all": "yarn gen:spec && yarn gen:routes",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/&& cp -R configs ./build/ && cp ecosystem.config.js ./build/",
     "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false",
-    "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map"
+    "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
+    "typeorm": "typeorm-ts-node-commonjs"
   },
   "dependencies": {
     "compression": "^1.7.4",
@@ -26,11 +30,11 @@
     "mongoose": "^8.4.3",
     "morgan": "^1.10.0",
     "pg": "^8.12.0",
-    "swagger-ui-express": "^5.0.0",
+    "swagger-ui-express": "^5.0.1",
     "tsoa": "^6.2.1",
     "typeorm": "^0.3.20",
     "winston": "^3.13.0",
-    "zod": "^3.22.4"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/compression": "^1.7.5",
