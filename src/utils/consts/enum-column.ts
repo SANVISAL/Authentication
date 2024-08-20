@@ -1,6 +1,12 @@
 export enum Gender {
-  male = "male",
-  female = "female",
-  other = "other",
-  unknow = "unknown",
+  Male = "male",
+  Female = "female",
+  Other = "other",
+  Unknown = "unknown",
+}
+
+export enum Roles {
+  user = "user",
+  admin = "admin",
+  superAdmin = "super_admin",
 }

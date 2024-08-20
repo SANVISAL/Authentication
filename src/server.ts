@@ -1,8 +1,13 @@
+import "reflect-metadata";
 import app from "./app";
 import { AppDataSource } from "./database/data-source";
 import { getConfig } from "./utils/cofig";
 import { logger, logInit } from "./utils/logger";
+import { Container } from "typeorm-typedi-extensions";
+import { useContainer as ormUseContainer } from "typeorm";
 
+// Tell TypeORM to use TypeDI container
+ormUseContainer(Container);
 async function run() {
   try {
     // Initialize environment

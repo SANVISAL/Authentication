@@ -1,8 +1,10 @@
 import { DataSource, EntityTarget, Repository, ObjectLiteral } from "typeorm";
 import { logger } from "@CRUD_PG/utils/logger";
 import { getConfig } from "@CRUD_PG/utils/cofig";
-import User from "./enities/user.entity";
+import { Container } from "typedi";
+import { useContainer } from "typeorm";
 
+useContainer(Container);
 export class AppDataSource {
   private static _instance: AppDataSource;
   private readonly _dataSource: DataSource;
@@ -17,8 +19,11 @@ export class AppDataSource {
       username: this._config.username,
       password: this._config.password,
       database: this._config.database,
-      entities: [User],
+      logging: true,
+      entities: [`${__dirname}/entities/*.entity.{ts,js}`],
       synchronize: true,
+      subscribers: [],
+      migrations: [`${__dirname}/migrations/*.{ts,js}`],
     });
   }
 
