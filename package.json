@@ -15,9 +15,14 @@
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/&& cp -R configs ./build/ && cp ecosystem.config.js ./build/",
     "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false",
     "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
-    "typeorm": "typeorm-ts-node-commonjs"
+    "typeorm": "typeorm-ts-node-commonjs",
+    "typeorm:generate": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate src/database/migrations/create-user-table -d src/database/cli-data-source.ts",
+    "typeorm:migrate": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/database/cli-data-source.ts",
+    "typeorm:revert": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d src/database/cli-data-source.ts",
+    "typeorm:drop": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:drop -d src/database/cli-data-source.ts"
   },
   "dependencies": {
+    "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
@@ -30,9 +35,12 @@
     "mongoose": "^8.4.3",
     "morgan": "^1.10.0",
     "pg": "^8.12.0",
+    "reflect-metadata": "^0.2.2",
     "swagger-ui-express": "^5.0.1",
     "tsoa": "^6.2.1",
+    "typedi": "^0.10.0",
     "typeorm": "^0.3.20",
+    "typeorm-typedi-extensions": "^0.4.1",
     "winston": "^3.13.0",
     "zod": "^3.23.8"
   },
