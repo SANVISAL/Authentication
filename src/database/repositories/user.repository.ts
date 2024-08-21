@@ -34,9 +34,10 @@ export class UserRepository {
     try {
       Validate(User);
       const newUser = this.repository.create(user);
-
-      return newUser;
+      const saveUser = await this.repository.save(newUser);
+      return saveUser;
     } catch (error: unknown) {
+      console.log("repo error: ", error);
       logger.error(
         `An error occurred while creating user in repository. ${error}`
       );

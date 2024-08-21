@@ -7,7 +7,7 @@ import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { StatusCode } from "@CRUD_PG/utils/consts";
 
 @Service()
-export class RoleRepository {
+export class UserRoleRepository {
   // @InjectManager()
   // private _entityManager!: EntityManager;
   constructor(
