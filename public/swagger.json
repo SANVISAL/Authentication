@@ -7,7 +7,11 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+<<<<<<< HEAD
 			"SuccessResponse_string_": {
+=======
+			"SuccessResponse____": {
+>>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
 				"properties": {
 					"code": {
 						"anyOf": [
@@ -26,7 +30,12 @@
 						"type": "string"
 					},
 					"result": {
+<<<<<<< HEAD
 						"type": "string"
+=======
+						"properties": {},
+						"type": "object"
+>>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
 					}
 				},
 				"required": [
@@ -49,16 +58,24 @@
 		"contact": {}
 	},
 	"paths": {
+<<<<<<< HEAD
 		"/api/v1/users": {
+=======
+		"/api/v1/health": {
+>>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
 			"get": {
-				"operationId": "GetAllUsers",
+				"operationId": "CheckHealth",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
+<<<<<<< HEAD
 									"$ref": "#/components/schemas/SuccessResponse_string_"
+=======
+									"$ref": "#/components/schemas/SuccessResponse____"
+>>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
 								}
 							}
 						}

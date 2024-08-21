@@ -37,17 +37,18 @@ class User {
   email!: string;
 
   @Column({ type: "varchar", length: 100, nullable: true })
-  @IsNotEmpty()
+  @IsNotEmpty({ message: "Password is required" })
   @Length(8, 50, { message: "Password must be greater than 8 characters" })
   password!: string;
 
   @Column({
     type: "enum",
     enum: Gender,
-    default: Gender.Unknown,
+    default: Gender.unknown,
   })
   @IsEnum(Gender, { message: "Gender must be a valid enum value" })
-  gender: Gender = Gender.Unknown;
+  @IsNotEmpty()
+  gender: Gender = Gender.unknown;
 
   @Column({ type: "boolean", default: false })
   @IsBoolean({ message: "isDeleted must be a boolean value" })

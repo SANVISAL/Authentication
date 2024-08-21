@@ -16,6 +16,7 @@ function createConfig(configPath: string) {
     "TYPE",
     "DATABASE_NAME",
     "HOST",
+    "DB_LOG",
   ];
   const missingConfig = requiredConfig.filter((key) => !process.env[key]);
 
@@ -38,6 +39,7 @@ function createConfig(configPath: string) {
     host: process.env.HOST,
     apiKey: process.env.API_KEY,
     apiSecret: process.env.API_SECRET,
+    dbLog: process.env.DB_LOG,
   };
 }
 

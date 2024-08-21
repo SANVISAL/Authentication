@@ -1,9 +1,9 @@
 
 export enum Gender {
-  Male = "male",
-  Female = "female",
-  Other = "other",
-  Unknown = "unknown",
+  male = "male",
+  female = "female",
+  other = "other",
+  unknown = "unknown",
 }
 
 export enum Roles {
