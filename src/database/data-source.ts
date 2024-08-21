@@ -1,8 +1,6 @@
 import { DataSource, EntityTarget, Repository, ObjectLiteral } from "typeorm";
 import { logger } from "@CRUD_PG/utils/logger";
 import { getConfig } from "@CRUD_PG/utils/cofig";
-import { Container } from "typedi";
-import { useContainer } from "typeorm";
 
 useContainer(Container);
 export class AppDataSource {
