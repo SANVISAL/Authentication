@@ -1,4 +1,4 @@
-import { IsNotEmpty } from "class-validator";
+import { IsBoolean, IsDate, IsNotEmpty } from "class-validator";
 import {
   Column,
   CreateDateColumn,
@@ -25,7 +25,12 @@ export class Session {
   token!: string;
 
   @Column({ type: "timestamp" })
+  @IsDate()
   expireAt!: Date;
+
+  @Column({ type: "boolean", default: false })
+  @IsBoolean({ message: "isDeleted must be a boolean value" })
+  isDeleted: boolean = false;
 
   @CreateDateColumn()
   createdAt!: Date;
