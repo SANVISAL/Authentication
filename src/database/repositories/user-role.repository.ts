@@ -7,9 +7,7 @@ import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { StatusCode } from "@CRUD_PG/utils/consts";
 
 @Service()
-export class RoleRepository {
-  // @InjectManager()
-  // private _entityManager!: EntityManager;
+export class UserRoleRepository {
   constructor(
     @InjectRepository(UserRole) private repository: Repository<UserRole>
   ) {}
@@ -19,58 +17,49 @@ export class RoleRepository {
     roleId: string
   ): Promise<UserRole | null> {
     try {
-      const userRole = await this.repository.findOne({
-        where: { userId: userId, roleId: roleId },
+      return await this.repository.findOne({
+        where: { userId, roleId },
       });
-
-      return userRole;
     } catch (error: unknown) {
+      logger.error(
+        `Failed to find user role. UserId: ${userId}, RoleId: ${roleId}. Error: ${error}`
+      );
       throw error;
     }
   }
 
   public async findAll(): Promise<UserRole[]> {
     try {
-      const userRoles = await this.repository.find();
-
-      return userRoles;
+      return await this.repository.find();
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while finding all user role in repository. ${error}`
-      );
+      logger.error(`Failed to retrieve all user roles. Error: ${error}`);
       throw error;
     }
   }
 
-  public async findRolesForUser(userId: string): Promise<UserRole[] | null> {
+  public async findRolesForUser(userId: string): Promise<UserRole[]> {
     try {
-      const usersRoles = await this.repository.find({
+      return await this.repository.find({
         where: { userId },
         relations: ["role"],
-      });   
-
-      return usersRoles;
+      });
     } catch (error: unknown) {
       logger.error(
-        `An error occurred while finding roles for user by user id in repository. ${error}`
+        `Failed to find roles for user. UserId: ${userId}. Error: ${error}`
       );
       throw error;
     }
   }
 
-  public async findUsersForRole(roleId: string): Promise<UserRole[] | null> {
+  public async findUsersForRole(roleId: string): Promise<UserRole[]> {
     try {
-      const roleUsers = await this.repository.find({
-        where: {
-          roleId,
-        },
+      return await this.repository.find({
+        where: { roleId },
         relations: ["user"],
       });
-
-      return roleUsers;
     } catch (error: unknown) {
       logger.error(
-        `An error occurred while finding users for role by role id in repository. ${error}`
+        `Failed to find users for role. RoleId: ${roleId}. Error: ${error}`
       );
       throw error;
     }
@@ -91,11 +80,10 @@ export class RoleRepository {
       }
 
       const newUserRole = this.repository.create({ userId, roleId });
-
-      return newUserRole;
+      return await this.repository.save(newUserRole);
     } catch (error: unknown) {
       logger.error(
-        `An error occurred while adding role to user by role id and user id in repository. ${error}`
+        `Failed to add role to user. UserId: ${userId}, RoleId: ${roleId}. Error: ${error}`
       );
       throw error;
     }

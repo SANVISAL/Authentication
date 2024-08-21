@@ -2,58 +2,38 @@ import { Repository } from "typeorm";
 import { Service } from "typedi";
 import { logger } from "@CRUD_PG/utils/logger";
 import { InjectRepository } from "typeorm-typedi-extensions";
-import { Validate } from "class-validator";
-import { Role } from "../entities/role..entity";
 import { IRole } from "@CRUD_PG/@types/role.type";
 import { UpdatedResult } from "@CRUD_PG/@types/common.type";
+import { Role } from "../entities/role..entity";
 
 @Service()
 export class RoleRepository {
-  // @InjectManager()
-  // private _entityManager!: EntityManager;
   constructor(@InjectRepository(Role) private repository: Repository<Role>) {}
 
   public async findById(id: string): Promise<Role | null> {
     try {
-      const role = await this.repository.findOne({
-        where: { id },
-      });
-
-      return role;
+      return await this.repository.findOne({ where: { id } });
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while finding role by id in repository. ${error}`
-      );
+      logger.error(`Failed to find role by id: ${id}. Error: ${error}`);
       throw error;
     }
   }
 
   public async create(role: Partial<IRole>): Promise<Role> {
     try {
-      Validate(Role);
-      const newRole = this.repository.create({
-        name: role.name,
-        description: role.description,
-      });
-
-      return newRole;
+      const newRole = this.repository.create(role);
+      return await this.repository.save(newRole);
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while creating role in repository. ${error}`
-      );
+      logger.error(`Failed to create role. Error: ${error}`);
       throw error;
     }
   }
 
   public async findAll(): Promise<Role[]> {
     try {
-      const roles = await this.repository.find();
-
-      return roles;
+      return await this.repository.find();
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while finding all roles in repository. ${error}`
-      );
+      logger.error(`Failed to retrieve all roles. Error: ${error}`);
       throw error;
     }
   }
@@ -63,20 +43,14 @@ export class RoleRepository {
     partialRole: Partial<IRole>
   ): Promise<UpdatedResult> {
     try {
-      const updatedRole = await this.repository.update(id, partialRole);
-
-      const updateResult: UpdatedResult = {
-        affected: updatedRole.affected,
-        generatedMaps: updatedRole.generatedMaps,
-        raw: updatedRole.generatedMaps,
+      const updateResult = await this.repository.update(id, partialRole);
+      return {
+        affected: updateResult.affected,
+        generatedMaps: updateResult.generatedMaps,
+        raw: updateResult.raw,
       };
-
-      return updateResult;
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while updating user in repository. ${error}`
-      );
-
+      logger.error(`Failed to update role by id: ${id}. Error: ${error}`);
       throw error;
     }
   }

@@ -1,15 +1,12 @@
-
+import { IUser } from "@CRUD_PG/@types/user.type";
 // import { RoleRepository } from "@CRUD_PG/database/repositories/role.repository";
 // import { SessionRepository } from "@CRUD_PG/database/repositories/session.repository";
 // import { UserRoleRepository } from "@CRUD_PG/database/repositories/user-role.repository";
-
-import { IUser } from "@CRUD_PG/@types/user.type";
 import { UserRepository } from "@CRUD_PG/database/repositories/user.repository";
 import { StatusCode } from "@CRUD_PG/utils/consts";
 import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { TokenService } from "@CRUD_PG/utils/jwt";
 import { SuccessResponse } from "@CRUD_PG/utils/response";
-
 
 export class AuthService {
   private _tokenService: TokenService;
