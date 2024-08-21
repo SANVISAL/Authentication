@@ -33,10 +33,15 @@ export class UserRepository {
   public async create(user: Partial<IUser>): Promise<User> {
     try {
       Validate(User);
+
       const newUser = this.repository.create(user);
+      if (!newUser) {
+        throw new HttpException("Invalid user data", StatusCode.BadRequest);
+      }
 
       return newUser;
     } catch (error: unknown) {
+      console.log("Herr:", error);
       logger.error(
         `An error occurred while creating user in repository. ${error}`
       );

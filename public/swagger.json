@@ -7,6 +7,240 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"Gender": {
+				"enum": [
+					"male",
+					"female",
+					"other",
+					"unknown"
+				],
+				"type": "string"
+			},
+			"User": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					},
+					"isDeleted": {
+						"type": "boolean",
+						"default": false
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"sesssion": {
+						"items": {
+							"$ref": "#/components/schemas/Session"
+						},
+						"type": "array"
+					},
+					"userRoles": {
+						"items": {
+							"$ref": "#/components/schemas/UserRole"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"firstName",
+					"lastName",
+					"email",
+					"password",
+					"createdAt",
+					"updatedAt",
+					"sesssion",
+					"userRoles"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Session": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"token": {
+						"type": "string"
+					},
+					"expireAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"isDeleted": {
+						"type": "boolean",
+						"default": false
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"user",
+					"token",
+					"expireAt",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Roles": {
+				"enum": [
+					"user",
+					"admin",
+					"super_admin"
+				],
+				"type": "string"
+			},
+			"UserRole": {
+				"properties": {
+					"userId": {
+						"type": "string"
+					},
+					"roleId": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"role": {
+						"$ref": "#/components/schemas/Role"
+					}
+				},
+				"required": [
+					"userId",
+					"roleId",
+					"user",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Role": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"$ref": "#/components/schemas/Roles"
+					},
+					"description": {
+						"type": "string"
+					},
+					"userRoles": {
+						"items": {
+							"$ref": "#/components/schemas/UserRole"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"userRoles"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponse__token-string--user-User__": {
+				"properties": {
+					"code": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									""
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"properties": {
+							"user": {
+								"$ref": "#/components/schemas/User"
+							},
+							"token": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"user",
+							"token"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"code",
+					"message",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IUser": {
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"email",
+					"gender",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"SuccessResponse_string_": {
 				"properties": {
 					"code": {
@@ -36,46 +270,6 @@
 				],
 				"type": "object",
 				"additionalProperties": false
-			},
-			"Gender": {
-				"enum": [
-					"male",
-					"female",
-					"other",
-					"unknown"
-				],
-				"type": "string"
-			},
-			"ICreateUser": {
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"firstName": {
-						"type": "string"
-					},
-					"lastName": {
-						"type": "string"
-					},
-					"gender": {
-						"$ref": "#/components/schemas/Gender"
-					},
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"firstName",
-					"lastName",
-					"gender",
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {}
@@ -91,14 +285,14 @@
 	"paths": {
 		"/api/v1/users": {
 			"post": {
-				"operationId": "CreateUser",
+				"operationId": "Register",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_string_"
+									"$ref": "#/components/schemas/SuccessResponse__token-string--user-User__"
 								}
 							}
 						}
@@ -111,7 +305,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ICreateUser"
+								"$ref": "#/components/schemas/IUser"
 							}
 						}
 					}
@@ -133,34 +327,6 @@
 				},
 				"security": [],
 				"parameters": []
-			}
-		},
-		"/api/v1/users/{id}": {
-			"delete": {
-				"operationId": "DeleteUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_string_"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
 			}
 		}
 	},

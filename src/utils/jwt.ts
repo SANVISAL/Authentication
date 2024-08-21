@@ -1,7 +1,8 @@
 import jwt, { Secret } from "jsonwebtoken";
-import { IUser } from "@CRUD_PG/services/mock-service.ts/mock-user";
+// import { IUser } from "@CRUD_PG/services/mock-service.ts/mock-user";
 
 import { privateKey } from "@CRUD_PG/server";
+import { User } from "@CRUD_PG/database/entities/user.entity";
 interface tokenPayload {
   sub: string;
   name: string;
@@ -23,10 +24,10 @@ export class TokenService {
   private generateJti(): string {
     return Math.random().toString(36).substring(7) + Date.now();
   }
-  
-  public issueToken(user: IUser): string {
+
+  public issueToken(user:User): string {
     const payload: tokenPayload = {
-      sub: user.id,
+      sub: user.id.toString(),
       name: user.firstName + " " + user.lastName,
       aud: "your-service",
       scope: "read:messages",
