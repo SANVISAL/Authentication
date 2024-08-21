@@ -5,14 +5,11 @@ import { IUser } from "@CRUD_PG/@types/user.type";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { StatusCode } from "@CRUD_PG/utils/consts";
-import { Validate } from "class-validator";
 import { User } from "../entities/user.entity";
 import { UpdatedResult } from "@CRUD_PG/@types/common.type";
 
 @Service()
 export class UserRepository {
-  // @InjectManager()
-  // private _entityManager!: EntityManager;
   constructor(@InjectRepository(User) private repository: Repository<User>) {}
 
   public async findById(id: string): Promise<User | null> {
@@ -20,39 +17,28 @@ export class UserRepository {
       const user = await this.repository.findOne({
         where: { id, isDeleted: false },
       });
-
       return user;
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while finding user by id in repository. ${error}`
-      );
+      logger.error(`Failed to find user by id: ${id}. Error: ${error}`);
       throw error;
     }
   }
 
-  public async create(user: Partial<IUser>): Promise<User> {
+  public async create(user: IUser): Promise<User> {
     try {
-      Validate(User);
       const newUser = this.repository.create(user);
-
-      return newUser;
+      return await this.repository.save(newUser);
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while creating user in repository. ${error}`
-      );
+      logger.error(`Failed to create user. Error: ${error}`);
       throw error;
     }
   }
 
   public async findAll(): Promise<User[]> {
     try {
-      const users = await this.repository.find({ where: { isDeleted: false } });
-
-      return users;
+      return await this.repository.find({ where: { isDeleted: false } });
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while finding all users in repository. ${error}`
-      );
+      logger.error(`Failed to retrieve all users. Error: ${error}`);
       throw error;
     }
   }
@@ -62,20 +48,15 @@ export class UserRepository {
     partialUser: Partial<IUser>
   ): Promise<UpdatedResult> {
     try {
-      const updatedUser = await this.repository.update(id, partialUser);
+      const updateResult = await this.repository.update(id, partialUser);
 
-      const updateResult: UpdatedResult = {
-        affected: updatedUser.affected,
-        generatedMaps: updatedUser.generatedMaps,
-        raw: updatedUser.raw,
+      return {
+        affected: updateResult.affected,
+        generatedMaps: updateResult.generatedMaps,
+        raw: updateResult.raw,
       };
-
-      return updateResult;
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while updating user in repository. ${error}`
-      );
-
+      logger.error(`Failed to update user by id: ${id}. Error: ${error}`);
       throw error;
     }
   }
@@ -87,21 +68,18 @@ export class UserRepository {
       if (!existingUser) {
         throw new HttpException("User not found.", StatusCode.NotFound);
       }
+
       const deletedUser = await this.repository.update(id, {
         isDeleted: true,
       });
 
-      const deletedResult: UpdatedResult = {
+      return {
         affected: deletedUser.affected,
         generatedMaps: deletedUser.generatedMaps,
-        raw: deletedUser.generatedMaps,
+        raw: deletedUser.raw,
       };
-
-      return deletedResult;
     } catch (error: unknown) {
-      logger.error(
-        `An error occurred while soft deleting user in repository. ${error}`
-      );
+      logger.error(`Failed to soft delete user by id: ${id}. Error: ${error}`);
       throw error;
     }
   }
