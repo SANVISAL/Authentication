@@ -3,10 +3,16 @@ import app from "./app";
 import { AppDataSource } from "./database/data-source";
 import { getConfig } from "./utils/cofig";
 import { logger, logInit } from "./utils/logger";
-import { useContainer as typeOrmUseContainer } from "typeorm";
-import { Container } from "typedi";
+import { Container } from "typeorm-typedi-extensions";
+import { useContainer as ormUseContainer } from "typeorm";
+import fs from "fs";
+import path from "path";
 
-typeOrmUseContainer(Container);
+export const privateKey = fs.readFileSync(
+  path.join(__dirname, "../privateKey.pem")
+);
+// Tell TypeORM to use TypeDI container
+ormUseContainer(Container);
 async function run() {
   try {
     // Initialize environment

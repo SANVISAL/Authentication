@@ -1,4 +1,4 @@
-import User from "@project_name/database/models/model-user";
+import { User } from "../entities/user.entity";
 
 export interface UserCreate extends Partial<User> {
   firstname: string;
