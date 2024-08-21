@@ -5,7 +5,12 @@ import { getConfig } from "./utils/cofig";
 import { logger, logInit } from "./utils/logger";
 import { Container } from "typeorm-typedi-extensions";
 import { useContainer as ormUseContainer } from "typeorm";
+import fs from "fs";
+import path from "path";
 
+export const privateKey = fs.readFileSync(
+  path.join(__dirname, "../privateKey.pem")
+);
 // Tell TypeORM to use TypeDI container
 ormUseContainer(Container);
 async function run() {
