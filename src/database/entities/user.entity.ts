@@ -4,7 +4,6 @@ import {
   IsNotEmpty,
   Length,
   IsEnum,
-  IsOptional,
   IsBoolean,
 } from "class-validator";
 import {
@@ -14,11 +13,9 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   OneToMany,
-  ManyToMany,
-  JoinTable,
 } from "typeorm";
 import { Session } from "./session.entity";
-import { Role } from "./role..entity";
+import { UserRole } from "./user-role.entity";
 
 @Entity()
 class User {
@@ -40,7 +37,7 @@ class User {
   email!: string;
 
   @Column({ type: "varchar", length: 100, nullable: true })
-  @IsOptional()
+  @IsNotEmpty()
   @Length(8, 50, { message: "Password must be greater than 8 characters" })
   password!: string;
 
@@ -65,13 +62,8 @@ class User {
   @OneToMany(() => Session, (session) => session.user)
   sesssion!: Session[];
 
-  @ManyToMany(() => Role, (role) => role.users)
-  @JoinTable({
-    name: "User Role",
-    joinColumn: { name: "userId", referencedColumnName: "id" },
-    inverseJoinColumn: { name: "roleId", referencedColumnName: "id" },
-  })
-  roles!: Role[];
+  @OneToMany(() => UserRole, (userRole) => userRole.user)
+  userRoles!: UserRole[];
 }
 
 export { User };

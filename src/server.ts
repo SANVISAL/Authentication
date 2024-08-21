@@ -3,11 +3,10 @@ import app from "./app";
 import { AppDataSource } from "./database/data-source";
 import { getConfig } from "./utils/cofig";
 import { logger, logInit } from "./utils/logger";
-import { Container } from "typeorm-typedi-extensions";
-import { useContainer as ormUseContainer } from "typeorm";
+import { useContainer as typeOrmUseContainer } from "typeorm";
+import { Container } from "typedi";
 
-// Tell TypeORM to use TypeDI container
-ormUseContainer(Container);
+typeOrmUseContainer(Container);
 async function run() {
   try {
     // Initialize environment

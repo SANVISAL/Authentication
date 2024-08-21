@@ -16,7 +16,7 @@
     "test": "jest --coverage=true -w=1 --forceExit --detectOpenHandles --watchAll=false",
     "clean": "rm -rf ./build && rm -rf ./src//*.js && rm -rf ./src//*.js.map",
     "typeorm": "typeorm-ts-node-commonjs",
-    "typeorm:generate": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate src/database/migrations/create-user-table -d src/database/cli-data-source.ts",
+    "typeorm:generate": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:generate src/database/migrations/migrate -d src/database/cli-data-source.ts",
     "typeorm:migrate": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d src/database/cli-data-source.ts",
     "typeorm:revert": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d src/database/cli-data-source.ts",
     "typeorm:drop": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:drop -d src/database/cli-data-source.ts"
