@@ -11,3 +11,9 @@ export enum Roles {
   admin = "admin",
   superAdmin = "super_admin",
 }
+
+export enum SessionStatus {
+  active = "active",
+  expire = "expired",
+  terminated = "terminated",
+}

@@ -46,6 +46,11 @@ export class SessionRepository {
     partialSession: Partial<ISession>
   ): Promise<UpdatedResult> {
     try {
+      const existingSession = await this.findById(id);
+
+      if (!existingSession) {
+        throw new HttpException("Session not found.", StatusCode.NotFound);
+      }
       const updateResult = await this.repository.update(id, partialSession);
       return {
         affected: updateResult.affected,
