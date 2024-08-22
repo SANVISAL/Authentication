@@ -1,6 +1,6 @@
 export interface ISession {
   token: string;
-  expireAt: Date;
+  expireAt: Date ;
 }
 
 export interface ISessionResponse extends ISession {
