@@ -6,5 +6,5 @@ export interface ILoginUser {
 export interface IJwt {
   accessToken: string;
   refreshToken: string;
-  expireAt: string;
+  expireAt: Date;
 }
