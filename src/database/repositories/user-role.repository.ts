@@ -1,16 +1,11 @@
 import { logger } from "@CRUD_PG/utils/logger";
-import { Service } from "typedi";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { UserRole } from "../entities/user-role.entity";
 import { Repository } from "typeorm";
 import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { StatusCode } from "@CRUD_PG/utils/consts";
 
-@Service()
 export class UserRoleRepository {
-  constructor(
-    @InjectRepository(UserRole) private repository: Repository<UserRole>
-  ) {}
+  constructor(private repository: Repository<UserRole>) {}
 
   public async findOne(
     userId: string,

@@ -1,53 +1,38 @@
-// import { IUser } from "@CRUD_PG/@types/user.type";
-import { ROUTE_PATH } from "@CRUD_PG/routes";
-import { AuthService } from "@CRUD_PG/services/auth-service";
-import { ApiError } from "@CRUD_PG/utils/api-error";
-// import { StatusCode } from "@CRUD_PG/utils/consts";
-import { HttpException } from "@CRUD_PG/utils/http-exception";
-import { Get, Route } from "tsoa";
-import Container from "typedi";
-// import Container from "typedi";
+import { AuthService } from "@CRUD_PG/services/auth.service";
+import { IAuthController, IAuthResponse } from "./@types/auth.controller.type";
+import { IUser } from "@CRUD_PG/@types/user.type";
+import { ILoginUser } from "@CRUD_PG/@types/auth.type";
+import { SuccessResponse } from "@CRUD_PG/utils/response";
+import { Get, Post, Route, SuccessResponse as Success } from "tsoa";
+import { routePath } from "@CRUD_PG/routes";
+import { StatusCode } from "@CRUD_PG/utils/consts";
 
-@Route("api/v1")
-export class AuthController {
-  private authService: AuthService;
+@Route("/api/v1")
+export class AuthController implements IAuthController {
+  constructor(private readonly authService: AuthService) {}
 
-  constructor() {
-    // Injecting the AuthService using TypeDI Container
-    this.authService = Container.get(AuthService);
-  // }
-  // @Post(ROUTE_PATH.CREATE_USER)
-  // public async register(@Body() user: IUser) {
-  //   console.log("Register", user);
-  //   try {
-  //     if (!user) {
-  //       throw new HttpException(
-  //         "Invalid Email Or Password.",
-  //         StatusCode.BadRequest
-  //       );
-      }
-  //     const response = await this.authService.register(user);
-  //     return response;
-  //   } catch (error) {
-  //     if (error instanceof HttpException) {
-  //       throw error;
-  //     }
-  //     throw new ApiError();
-  //   }
-  // }
-  @Get(ROUTE_PATH.GET_ALL_USERS)
-  public async getAllUsers() {
+  @Success(StatusCode.Created, "Created")
+  @Post(routePath.REGISTER)
+  public async register(user: IUser): Promise<IAuthResponse> {
     try {
-      console.log("fjfjfjf");
-      const response = await this.authService.getAllUsers();
-      return response;
-    } catch (error) {
-      console.log("Error :", error);
-      console.log("Herre: ++", error);
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new ApiError();
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+  @Success(StatusCode.Created, "Created")
+  @Post(routePath.LOGIN)
+  public async login(user: ILoginUser): Promise<IAuthResponse> {
+    try {
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  @Get(routePath.LOGOUT)
+  public async logout(id: string): Promise<SuccessResponse<null>> {
+    try {
+    } catch (error: unknown) {
+      throw error;
     }
   }
 }

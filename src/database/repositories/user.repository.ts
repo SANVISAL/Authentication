@@ -1,16 +1,13 @@
 import { Repository } from "typeorm";
-import { Service } from "typedi";
 import { logger } from "@CRUD_PG/utils/logger";
 import { IUser } from "@CRUD_PG/@types/user.type";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { StatusCode } from "@CRUD_PG/utils/consts";
 import { User } from "../entities/user.entity";
 import { UpdatedResult } from "@CRUD_PG/@types/common.type";
 
-@Service()
 export class UserRepository {
-  constructor(@InjectRepository(User) private repository: Repository<User>) {}
+  constructor(private repository: Repository<User>) {}
 
   public async findById(id: string): Promise<User | null> {
     try {

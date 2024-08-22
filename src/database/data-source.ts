@@ -54,10 +54,7 @@ export class AppDataSource {
     }
   }
 
-  public async getDataSource(): Promise<DataSource> {
-    if (!this._dataSource.isInitialized) {
-      await this.initialize(); // Use the existing initialize method
-    }
+  public getDataSource(): DataSource {
     return this._dataSource;
   }
 

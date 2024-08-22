@@ -1,14 +1,11 @@
 import { Repository } from "typeorm";
-import { Service } from "typedi";
 import { logger } from "@CRUD_PG/utils/logger";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { IRole } from "@CRUD_PG/@types/role.type";
 import { UpdatedResult } from "@CRUD_PG/@types/common.type";
 import { Role } from "../entities/role..entity";
 
-@Service()
 export class RoleRepository {
-  constructor(@InjectRepository(Role) private repository: Repository<Role>) {}
+  constructor(private repository: Repository<Role>) {}
 
   public async findById(id: string): Promise<Role | null> {
     try {

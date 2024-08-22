@@ -3,16 +3,7 @@ import app from "./app";
 import { AppDataSource } from "./database/data-source";
 import { getConfig } from "./utils/cofig";
 import { logger, logInit } from "./utils/logger";
-import { Container } from "typeorm-typedi-extensions";
-import { useContainer as ormUseContainer } from "typeorm";
-import fs from "fs";
-import path from "path";
 
-export const privateKey = fs.readFileSync(
-  path.join(__dirname, "../privateKey.pem")
-);
-// Tell TypeORM to use TypeDI container
-ormUseContainer(Container);
 async function run() {
   try {
     // Initialize environment
@@ -22,6 +13,7 @@ async function run() {
     // Activate logger
     logInit({ env: currentEnv, logLevel: config.logLevel });
     logger.info(`SCM server has started with process id ${process.pid}`);
+    // app.ts
 
     // Initialize PostgreSQL connection using TypeORM DataSource
     const appDataSource = AppDataSource.getInstance();

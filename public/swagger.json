@@ -8,27 +8,28 @@
 		"responses": {},
 		"schemas": {
 <<<<<<< HEAD
+<<<<<<< HEAD
 			"SuccessResponse_string_": {
 =======
 			"SuccessResponse____": {
 >>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
+=======
+			"Gender": {
+				"enum": [
+					"male",
+					"female",
+					"other",
+					"unknown"
+				],
+				"type": "string"
+			},
+			"User": {
+>>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
 				"properties": {
-					"code": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "string",
-								"enum": [
-									""
-								]
-							}
-						]
-					},
-					"message": {
+					"id": {
 						"type": "string"
 					},
+<<<<<<< HEAD
 					"result": {
 <<<<<<< HEAD
 						"type": "string"
@@ -36,12 +37,154 @@
 						"properties": {},
 						"type": "object"
 >>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
+=======
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					},
+					"isDeleted": {
+						"type": "boolean",
+						"default": false
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"sesssion": {
+						"items": {
+							"$ref": "#/components/schemas/Session"
+						},
+						"type": "array"
+					},
+					"userRoles": {
+						"items": {
+							"$ref": "#/components/schemas/UserRole"
+						},
+						"type": "array"
+>>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
 					}
 				},
 				"required": [
-					"code",
-					"message",
-					"result"
+					"id",
+					"firstName",
+					"lastName",
+					"email",
+					"password",
+					"createdAt",
+					"updatedAt",
+					"sesssion",
+					"userRoles"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Session": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"token": {
+						"type": "string"
+					},
+					"expireAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"isDeleted": {
+						"type": "boolean",
+						"default": false
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"user",
+					"token",
+					"expireAt",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Roles": {
+				"enum": [
+					"user",
+					"admin",
+					"super_admin"
+				],
+				"type": "string"
+			},
+			"UserRole": {
+				"properties": {
+					"userId": {
+						"type": "string"
+					},
+					"roleId": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"role": {
+						"$ref": "#/components/schemas/Role"
+					}
+				},
+				"required": [
+					"userId",
+					"roleId",
+					"user",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Role": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"$ref": "#/components/schemas/Roles"
+					},
+					"description": {
+						"type": "string"
+					},
+					"userRoles": {
+						"items": {
+							"$ref": "#/components/schemas/UserRole"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"userRoles"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -72,10 +215,17 @@
 							"application/json": {
 								"schema": {
 <<<<<<< HEAD
+<<<<<<< HEAD
 									"$ref": "#/components/schemas/SuccessResponse_string_"
 =======
 									"$ref": "#/components/schemas/SuccessResponse____"
 >>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
+=======
+									"items": {
+										"$ref": "#/components/schemas/User"
+									},
+									"type": "array"
+>>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
 								}
 							}
 						}
