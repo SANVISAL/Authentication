@@ -1,5 +1,5 @@
-import { IJwt, ILoginUser } from "@CRUD_PG/@types/auth.type";
-import { IUser } from "@CRUD_PG/@types/user.type";
+import { IJwt, ILoginUser } from "@AUTH/@types/auth.type";
+import { IUser } from "@AUTH/@types/user.type";
 
 export interface IAuthService {
   register(user: IUser): Promise<IJwt>; // return jwt token including access and fresh and expire date

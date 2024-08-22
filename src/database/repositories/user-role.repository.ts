@@ -1,8 +1,8 @@
-import { logger } from "@CRUD_PG/utils/logger";
+import { StatusCode } from "@AUTH/utils/consts";
+import { HttpException } from "@AUTH/utils/http-exception";
+import { logger } from "@AUTH/utils/logger";
 import { UserRole } from "../entities/user-role.entity";
 import { Repository } from "typeorm";
-import { HttpException } from "@CRUD_PG/utils/http-exception";
-import { StatusCode } from "@CRUD_PG/utils/consts";
 
 export class UserRoleRepository {
   constructor(private repository: Repository<UserRole>) {}

@@ -1,8 +1,8 @@
 import { Repository } from "typeorm";
-import { logger } from "@CRUD_PG/utils/logger";
-import { IRole } from "@CRUD_PG/@types/role.type";
-import { UpdatedResult } from "@CRUD_PG/@types/common.type";
 import { Role } from "../entities/role..entity";
+import { UpdatedResult } from "@AUTH/@types/common.type";
+import { IRole } from "@AUTH/@types/role.type";
+import { logger } from "@AUTH/utils/logger";
 
 export class RoleRepository {
   constructor(private repository: Repository<Role>) {}

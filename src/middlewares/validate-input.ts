@@ -1,9 +1,9 @@
+import { ApiError } from "@AUTH/utils/api-error";
+import { StatusCode } from "@AUTH/utils/consts";
+import { HttpException } from "@AUTH/utils/http-exception";
+import { logger } from "@AUTH/utils/logger";
 import { Response, Request, NextFunction } from "express";
-import { StatusCode } from "@CRUD_PG/utils/consts";
 import { Schema, ZodError } from "zod";
-import { HttpException } from "@CRUD_PG/utils/http-exception";
-import { ApiError } from "@CRUD_PG/utils/api-error";
-import { logger } from "@CRUD_PG/utils/logger";
 
 export const inputValidator = (schema: Schema) => {
   return async (req: Request, _res: Response, next: NextFunction) => {

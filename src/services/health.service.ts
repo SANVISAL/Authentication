@@ -1,4 +1,4 @@
-import { UserRepository } from "@CRUD_PG/database/repositories/user.repository";
+import { UserRepository } from "@AUTH/database/repositories/user.repository";
 
 export class HealthService {
   constructor(private userRepository: UserRepository) {}

@@ -28,8 +28,12 @@ import type {
   RequestHandler,
   Router,
 } from "express";
+<<<<<<< HEAD
 import { AppContainer } from "@CRUD_PG/di/app-container";
 >>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
+=======
+import { AppContainer } from "@AUTH/di/app-container";
+>>>>>>> 44de3acab39bbffcc80fa67e37262a7d43915caf
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 

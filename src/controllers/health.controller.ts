@@ -1,4 +1,4 @@
-import { HealthService } from "@CRUD_PG/services/health.service";
+import { HealthService } from "@AUTH/services/health.service";
 import { Get, Route } from "tsoa";
 
 @Route("/api/v1")

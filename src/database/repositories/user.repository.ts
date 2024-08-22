@@ -1,10 +1,10 @@
+import { UpdatedResult } from "@AUTH/@types/common.type";
+import { IUser } from "@AUTH/@types/user.type";
+import { StatusCode } from "@AUTH/utils/consts";
+import { HttpException } from "@AUTH/utils/http-exception";
+import { logger } from "@AUTH/utils/logger";
 import { Repository } from "typeorm";
-import { logger } from "@CRUD_PG/utils/logger";
-import { IUser } from "@CRUD_PG/@types/user.type";
-import { HttpException } from "@CRUD_PG/utils/http-exception";
-import { StatusCode } from "@CRUD_PG/utils/consts";
 import { User } from "../entities/user.entity";
-import { UpdatedResult } from "@CRUD_PG/@types/common.type";
 
 export class UserRepository {
   constructor(private repository: Repository<User>) {}

@@ -14,7 +14,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { User } from "./user.entity";
-import { SessionStatus } from "@CRUD_PG/utils/consts/enum-column";
+import { SessionStatus } from "@AUTH/utils/consts/enum-column";
 
 @Entity()
 export class Session {

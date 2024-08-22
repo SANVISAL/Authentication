@@ -1,6 +1,6 @@
 import { Router, Request, Response, NextFunction } from "express";
 import { routePath } from "..";
-import { AppContainer } from "@CRUD_PG/di/app-container";
+import { AppContainer } from "@AUTH/di/app-container";
 
 const router: Router = Router();
 
