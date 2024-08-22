@@ -12,6 +12,16 @@ import { UpdatedResult } from "@CRUD_PG/@types/common.type";
 export class UserRepository {
   constructor(@InjectRepository(User) private repository: Repository<User>) {}
 
+  public async create(user: IUser): Promise<User> {
+    try {
+      const newUser = this.repository.create(user);
+      return await this.repository.save(newUser);
+    } catch (error: unknown) {
+      logger.error(`Failed to create user. Error: ${error}`);
+      throw error;
+    }
+  }
+
   public async findById(id: string): Promise<User | null> {
     try {
       const user = await this.repository.findOne({
@@ -20,16 +30,6 @@ export class UserRepository {
       return user;
     } catch (error: unknown) {
       logger.error(`Failed to find user by id: ${id}. Error: ${error}`);
-      throw error;
-    }
-  }
-
-  public async create(user: IUser): Promise<User> {
-    try {
-      const newUser = this.repository.create(user);
-      return await this.repository.save(newUser);
-    } catch (error: unknown) {
-      logger.error(`Failed to create user. Error: ${error}`);
       throw error;
     }
   }

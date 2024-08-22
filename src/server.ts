@@ -11,6 +11,10 @@ import path from "path";
 export const privateKey = fs.readFileSync(
   path.join(__dirname, "../privateKey.pem")
 );
+
+export const publicKey = fs.readFileSync(
+  path.join(__dirname, "../publicKey.pem")
+);
 // Tell TypeORM to use TypeDI container
 ormUseContainer(Container);
 async function run() {

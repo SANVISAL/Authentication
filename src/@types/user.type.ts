@@ -24,5 +24,4 @@ export interface ICreateUser {
 export interface LoginInfor {
   email: string;
   password: string;
-  token: string;
 }

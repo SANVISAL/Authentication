@@ -14,7 +14,6 @@ import path from "path";
 import { ipWhitelist } from "./middlewares/ip-whitelist";
 import { RegisterRoutes } from "./routes/v1/routes";
 // import { authenticate } from "./middlewares/authenticate";
-import { RegisterRoutes } from "./routes/v1/routes";
 const app: Application = express();
 const config = getConfig();
 

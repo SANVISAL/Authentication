@@ -7,11 +7,7 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-<<<<<<< HEAD
 			"SuccessResponse_string_": {
-=======
-			"SuccessResponse____": {
->>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
 				"properties": {
 					"code": {
 						"anyOf": [
@@ -30,18 +26,69 @@
 						"type": "string"
 					},
 					"result": {
-<<<<<<< HEAD
 						"type": "string"
-=======
-						"properties": {},
-						"type": "object"
->>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
 					}
 				},
 				"required": [
 					"code",
 					"message",
 					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Gender": {
+				"enum": [
+					"male",
+					"female",
+					"other",
+					"unknown"
+				],
+				"type": "string"
+			},
+			"ICreateUser": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"gender",
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginInfor": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -58,11 +105,7 @@
 		"contact": {}
 	},
 	"paths": {
-<<<<<<< HEAD
-		"/api/v1/users": {
-=======
 		"/api/v1/health": {
->>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
 			"get": {
 				"operationId": "CheckHealth",
 				"responses": {
@@ -71,11 +114,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-<<<<<<< HEAD
-									"$ref": "#/components/schemas/SuccessResponse_string_"
-=======
-									"$ref": "#/components/schemas/SuccessResponse____"
->>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
+									"type": "string"
 								}
 							}
 						}
@@ -83,6 +122,109 @@
 				},
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/api/v1/users": {
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ICreateUser"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAllUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/{id}": {
+			"delete": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginInfor"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

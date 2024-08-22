@@ -5,4 +5,6 @@ export const ROUTE_PATH = {
   GET_USER: "/users/:id",
   DELETE_USER: "/users/:id",
   UPDATE_USER: "/users/:id",
+  LOGIN: "/auth/login",
+  REGISTER: "/auth/register",
 };
