@@ -21,6 +21,19 @@ export class UserRepository {
     }
   }
 
+  public async findByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await this.repository.findOne({
+        where: { email, isDeleted: false },
+      });
+
+      return user;
+    } catch (error: unknown) {
+      logger.error(`Failed to find user by email. Error: ${error}`);
+      throw error;
+    }
+  }
+
   public async create(user: IUser): Promise<User> {
     try {
       const newUser = this.repository.create(user);
@@ -45,6 +58,12 @@ export class UserRepository {
     partialUser: Partial<IUser>
   ): Promise<UpdatedResult> {
     try {
+      const existingUser = await this.findById(id);
+
+      if (!existingUser) {
+        throw new HttpException("User not found.", StatusCode.NotFound);
+      }
+
       const updateResult = await this.repository.update(id, partialUser);
 
       return {

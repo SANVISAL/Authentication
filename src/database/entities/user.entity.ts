@@ -5,6 +5,7 @@ import {
   Length,
   IsEnum,
   IsBoolean,
+  IsUUID,
 } from "class-validator";
 import {
   Column,
@@ -20,6 +21,7 @@ import { UserRole } from "./user-role.entity";
 @Entity()
 class User {
   @PrimaryGeneratedColumn("uuid")
+  @IsUUID()
   id!: string;
 
   @Column({ type: "varchar", length: 50 })
