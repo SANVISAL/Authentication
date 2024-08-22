@@ -13,7 +13,7 @@ import swaggerUi from "swagger-ui-express";
 import path from "path";
 import { ipWhitelist } from "./middlewares/ip-whitelist";
 import { RegisterRoutes } from "./routes/v1/routes";
-
+// import { authenticate } from "./middlewares/authenticate";
 const app: Application = express();
 const config = getConfig();
 
