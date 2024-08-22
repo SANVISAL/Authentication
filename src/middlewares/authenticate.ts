@@ -1,7 +1,7 @@
-import { getConfig } from "@CRUD_PG/utils/cofig";
-import { StatusCode } from "@CRUD_PG/utils/consts";
-import { HttpException } from "@CRUD_PG/utils/http-exception";
-import { logger } from "@CRUD_PG/utils/logger";
+import { getConfig } from "@AUTH/utils/cofig";
+import { StatusCode } from "@AUTH/utils/consts";
+import { HttpException } from "@AUTH/utils/http-exception";
+import { logger } from "@AUTH/utils/logger";
 import { NextFunction, Request, Response } from "express";
 
 export const authenticate = (

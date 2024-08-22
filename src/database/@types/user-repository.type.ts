@@ -1,5 +1,6 @@
-import { IUser, IUserResponse } from "@CRUD_PG/@types/user.type";
-import { User } from "@CRUD_PG/database/entities/user.entity";
+import { IUser, IUserResponse } from "@AUTH/@types/user.type";
+import { User } from "../entities/user.entity";
+
 export interface UserCreate extends Partial<User> {
   firstname: string;
   lastname: string;

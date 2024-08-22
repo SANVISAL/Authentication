@@ -1,6 +1,6 @@
-import { StatusCode } from "@CRUD_PG/utils/consts";
-import { HttpException } from "@CRUD_PG/utils/http-exception";
-import { ErrorResponse } from "@CRUD_PG/utils/response";
+import { StatusCode } from "@AUTH/utils/consts";
+import { HttpException } from "@AUTH/utils/http-exception";
+import { ErrorResponse } from "@AUTH/utils/response";
 import { NextFunction, Request, Response } from "express";
 
 export const exceptionHandler = (

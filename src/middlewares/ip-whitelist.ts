@@ -1,5 +1,5 @@
-import { StatusCode } from "@CRUD_PG/utils/consts";
-import { HttpException } from "@CRUD_PG/utils/http-exception";
+import { StatusCode } from "@AUTH/utils/consts";
+import { HttpException } from "@AUTH/utils/http-exception";
 import { NextFunction, Request, Response } from "express";
 
 export const ipWhitelist = (whitelist: string[]) => {

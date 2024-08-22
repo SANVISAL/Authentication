@@ -1,7 +1,7 @@
-import { IJwt, ILoginUser } from "@CRUD_PG/@types/auth.type";
-import { IUser } from "@CRUD_PG/@types/user.type";
-import { ApiResponse } from "@CRUD_PG/utils/@types/response.type";
-import { SuccessResponse } from "@CRUD_PG/utils/response";
+import { IJwt, ILoginUser } from "@AUTH/@types/auth.type";
+import { IUser } from "@AUTH/@types/user.type";
+import { ApiResponse } from "@AUTH/utils/@types/response.type";
+import { SuccessResponse } from "@AUTH/utils/response";
 
 export interface IAuthResponse extends ApiResponse<IJwt> {}
 

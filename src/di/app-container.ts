@@ -1,16 +1,16 @@
-import { AuthController } from "@CRUD_PG/controllers/auth.controller";
-import { HealthController } from "@CRUD_PG/controllers/health.controller";
-import { AppDataSource } from "@CRUD_PG/database/data-source";
-import { Role } from "@CRUD_PG/database/entities/role..entity";
-import { Session } from "@CRUD_PG/database/entities/session.entity";
-import { UserRole } from "@CRUD_PG/database/entities/user-role.entity";
-import { User } from "@CRUD_PG/database/entities/user.entity";
-import { RoleRepository } from "@CRUD_PG/database/repositories/role.repository";
-import { SessionRepository } from "@CRUD_PG/database/repositories/session.repository";
-import { UserRoleRepository } from "@CRUD_PG/database/repositories/user-role.repository";
-import { UserRepository } from "@CRUD_PG/database/repositories/user.repository";
-import { AuthService } from "@CRUD_PG/services/auth.service";
-import { HealthService } from "@CRUD_PG/services/health.service";
+import { AuthController } from "@AUTH/controllers/auth.controller";
+import { HealthController } from "@AUTH/controllers/health.controller";
+import { AppDataSource } from "@AUTH/database/data-source";
+import { Role } from "@AUTH/database/entities/role..entity";
+import { Session } from "@AUTH/database/entities/session.entity";
+import { UserRole } from "@AUTH/database/entities/user-role.entity";
+import { User } from "@AUTH/database/entities/user.entity";
+import { RoleRepository } from "@AUTH/database/repositories/role.repository";
+import { SessionRepository } from "@AUTH/database/repositories/session.repository";
+import { UserRoleRepository } from "@AUTH/database/repositories/user-role.repository";
+import { UserRepository } from "@AUTH/database/repositories/user.repository";
+import { AuthService } from "@AUTH/services/auth.service";
+import { HealthService } from "@AUTH/services/health.service";
 
 export class AppContainer {
   private static userRepository: UserRepository;

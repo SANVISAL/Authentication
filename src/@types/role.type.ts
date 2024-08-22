@@ -1,4 +1,4 @@
-import { Roles } from "@CRUD_PG/utils/consts";
+import { Roles } from "@AUTH/utils/consts";
 
 export interface IRole {
   name: Roles;

@@ -1,6 +1,6 @@
+import { getConfig } from "@AUTH/utils/cofig";
+import { logger } from "@AUTH/utils/logger";
 import { DataSource } from "typeorm";
-import { logger } from "@CRUD_PG/utils/logger";
-import { getConfig } from "@CRUD_PG/utils/cofig";
 
 const config = getConfig();
 

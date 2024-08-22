@@ -1,4 +1,4 @@
-import { SessionStatus } from "@CRUD_PG/utils/consts/enum-column";
+import { SessionStatus } from "@AUTH/utils/consts/enum-column";
 
 export interface ISession {
   accessToken: string;

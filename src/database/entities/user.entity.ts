@@ -1,4 +1,3 @@
-import { Gender } from "@CRUD_PG/utils/consts/enum-column";
 import {
   IsEmail,
   IsNotEmpty,
@@ -17,6 +16,7 @@ import {
 } from "typeorm";
 import { Session } from "./session.entity";
 import { UserRole } from "./user-role.entity";
+import { Gender } from "@AUTH/utils/consts";
 
 @Entity()
 class User {
