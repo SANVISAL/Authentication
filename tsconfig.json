@@ -32,7 +32,7 @@
       }
     ],
     "paths": {
-      "@CRUD_PG/*": ["src/*"],
+      "@AUTH/*": ["src/*"],
       "tsoa": [
         "node_modules/tsoa/dist"
       ],

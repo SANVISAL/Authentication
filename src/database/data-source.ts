@@ -1,6 +1,7 @@
+import { getConfig } from "@AUTH/utils/cofig";
+import { logger } from "@AUTH/utils/logger";
 import { DataSource, EntityTarget, Repository, ObjectLiteral } from "typeorm";
-import { logger } from "@CRUD_PG/utils/logger";
-import { getConfig } from "@CRUD_PG/utils/cofig";
+
 
 export class AppDataSource {
   private static _instance: AppDataSource;

@@ -1,11 +1,11 @@
-import { AuthService } from "@CRUD_PG/services/auth.service";
+import { ILoginUser } from "@AUTH/@types/auth.type";
+import { IUser } from "@AUTH/@types/user.type";
+import { routePath } from "@AUTH/routes";
+import { AuthService } from "@AUTH/services/auth.service";
+import { StatusCode } from "@AUTH/utils/consts";
+import { SuccessResponse } from "@AUTH/utils/response";
+import { Route, Post, Get, SuccessResponse as Success } from "tsoa";
 import { IAuthController, IAuthResponse } from "./@types/auth.controller.type";
-import { IUser } from "@CRUD_PG/@types/user.type";
-import { ILoginUser } from "@CRUD_PG/@types/auth.type";
-import { SuccessResponse } from "@CRUD_PG/utils/response";
-import { Get, Post, Route, SuccessResponse as Success } from "tsoa";
-import { routePath } from "@CRUD_PG/routes";
-import { StatusCode } from "@CRUD_PG/utils/consts";
 
 @Route("/api/v1")
 export class AuthController implements IAuthController {

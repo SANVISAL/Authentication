@@ -1,10 +1,10 @@
-import { ISession } from "@CRUD_PG/@types/session.type";
-import { logger } from "@CRUD_PG/utils/logger";
 import { Repository } from "typeorm";
 import { Session } from "../entities/session.entity";
-import { UpdatedResult } from "@CRUD_PG/@types/common.type";
-import { HttpException } from "@CRUD_PG/utils/http-exception";
-import { StatusCode } from "@CRUD_PG/utils/consts";
+import { UpdatedResult } from "@AUTH/@types/common.type";
+import { ISession } from "@AUTH/@types/session.type";
+import { StatusCode } from "@AUTH/utils/consts";
+import { HttpException } from "@AUTH/utils/http-exception";
+import { logger } from "@AUTH/utils/logger";
 
 export class SessionRepository {
   constructor(private repository: Repository<Session>) {}

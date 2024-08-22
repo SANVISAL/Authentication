@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { IsEnum, IsOptional, IsUUID } from "class-validator";
-import { Roles } from "@CRUD_PG/utils/consts";
 import { UserRole } from "./user-role.entity";
+import { Roles } from "@AUTH/utils/consts";
 
 @Entity()
 export class Role {

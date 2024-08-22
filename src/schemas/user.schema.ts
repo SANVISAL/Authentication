@@ -1,4 +1,4 @@
-import { Gender } from "@CRUD_PG/utils/consts/enum-column";
+import { Gender } from "@AUTH/utils/consts";
 import { z } from "zod";
 
 const userSchema = z.object({
