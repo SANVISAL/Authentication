@@ -1,18 +1,13 @@
 import { ISession } from "@CRUD_PG/@types/session.type";
 import { logger } from "@CRUD_PG/utils/logger";
-import { Service } from "typedi";
 import { Repository } from "typeorm";
-import { InjectRepository } from "typeorm-typedi-extensions";
 import { Session } from "../entities/session.entity";
 import { UpdatedResult } from "@CRUD_PG/@types/common.type";
 import { HttpException } from "@CRUD_PG/utils/http-exception";
 import { StatusCode } from "@CRUD_PG/utils/consts";
 
-@Service()
 export class SessionRepository {
-  constructor(
-    @InjectRepository(Session) private repository: Repository<Session>
-  ) {}
+  constructor(private repository: Repository<Session>) {}
 
   public async findById(id: string): Promise<Session | null> {
     try {
