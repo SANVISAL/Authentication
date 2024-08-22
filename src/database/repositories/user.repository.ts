@@ -90,6 +90,17 @@ export class UserRepository {
     }
   }
 
+  public async findByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await this.repository.findOne({
+        where: { email, isDeleted: false },
+      });
+      return user;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   public async softDelete(id: string): Promise<UpdatedResult> {
     try {
       const existingUser = await this.findById(id);

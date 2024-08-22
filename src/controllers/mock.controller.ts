@@ -1,6 +1,6 @@
 // import { ICreateUser } from "@CRUD_PG/@types/user.type";
 import { ICreateUser, LoginInfor } from "@CRUD_PG/@types/user.type";
-import { ROUTE_PATH } from "@CRUD_PG/routes";
+import { routePath } from "@CRUD_PG/routes";
 import {
   AuthService,
   // IUser,
@@ -16,7 +16,7 @@ export class UserController {
   constructor() {
     this.authService = new AuthService();
   }
-  @Post(ROUTE_PATH.CREATE_USER)
+  @Post(routePath.CREATE_USER)
   public async createUser(@Body() userDetails: ICreateUser) {
     try {
       console.log("Hello :");
@@ -30,7 +30,7 @@ export class UserController {
       throw new ApiError();
     }
   }
-  @Get(ROUTE_PATH.GET_ALL_USERS)
+  @Get(routePath.GET_ALL_USERS)
   public async getAllUsers() {
     try {
       console.log("fjfjfjf");
@@ -45,7 +45,7 @@ export class UserController {
       throw new ApiError();
     }
   }
-  @Delete(ROUTE_PATH.DELETE_USER)
+  @Delete(routePath.DELETE_USER)
   public async deleteUser(@Path() id: string) {
     try {
       const response = await this.authService.deleteUser(id);
@@ -58,7 +58,7 @@ export class UserController {
       throw new ApiError();
     }
   }
-  // @Put(ROUTE_PATH.UPDATE_USER)
+  // @Put(routePath.UPDATE_USER)
   // public async updateUser(@Path() id: string, @Body() userDetails: IUser) {
   //   try {
   //     console.log("Hello :", id);
@@ -72,7 +72,7 @@ export class UserController {
   //     throw new ApiError();
   //   }
   // }
-  @Post(ROUTE_PATH.LOGIN)
+  @Post(routePath.LOGIN)
   public async login(@Body() loginDetails: LoginInfor) {
     try {
       console.log("login");

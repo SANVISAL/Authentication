@@ -4,6 +4,8 @@ import { IUser } from "@CRUD_PG/services/mock-service.ts/auth-service";
 import { HttpException } from "./http-exception";
 import { StatusCode } from "./consts";
 import { logger } from "./logger";
+// import { IJwt } from "@CRUD_PG/@types/auth.type";
+// import { string } from "joi";
 
 interface TokenPayload extends JwtPayload {
   sub: string;
@@ -58,6 +60,8 @@ export class TokenService {
 
   public rotateRefreshToken(user: IUser): string {
     const jit = this.generateJti();
+    // const refreshTokenExpiresIn = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
+    // const expireAt = new Date(Date.now() + refreshTokenExpiresIn);
     const newRefreshToken = jwt.sign({ sub: user.id }, this.privateKey, {
       algorithm: "RS256",
       expiresIn: "7d",
