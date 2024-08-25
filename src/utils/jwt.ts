@@ -1,9 +1,10 @@
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
-import { privateKey, publicKey } from "@CRUD_PG/server";
-import { IUser } from "@CRUD_PG/services/mock-service.ts/auth-service";
+import { privateKey, publicKey } from "@AUTH/server";
 import { HttpException } from "./http-exception";
 import { StatusCode } from "./consts";
 import { logger } from "./logger";
+import { User } from "@AUTH/database/entities/user.entity";
+// import { ICreateUser, IUser } from "@AUTH/@types/user.type";
 // import { IJwt } from "@CRUD_PG/@types/auth.type";
 // import { string } from "joi";
 
@@ -12,6 +13,7 @@ interface TokenPayload extends JwtPayload {
   name: string;
   aud: string;
   scope: string;
+  // role: string;
   iat?: number;
   exp?: number;
   jti: string;
@@ -30,11 +32,13 @@ export class TokenService {
     return Math.random().toString(36).substring(7) + Date.now();
   }
 
-  public issueToken(user: IUser): string {
+  public  issueToken(user: User): string {
+    // const role =  this.roleRepository.findByName(user.role);
     const payload: TokenPayload = {
       sub: user.id,
       name: user.firstName + " " + user.lastName,
-      aud: "your-service",
+      // role: roleName,
+      aud: "authentication",
       scope: "read:messages",
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 60 * 15,
@@ -57,11 +61,16 @@ export class TokenService {
       throw new HttpException("Invalid token", StatusCode.BadRequest);
     }
   }
+  public getTokenExpiration(token: string): Date {
+    const decoded = jwt.decode(token) as JwtPayload;
+    if (decoded && decoded.exp) {
+      return new Date(decoded.exp * 1000); // Convert to milliseconds
+    }
+    return new Date(); // Default fallback
+  }
 
-  public rotateRefreshToken(user: IUser): string {
+  public rotateRefreshToken(user: User): string {
     const jit = this.generateJti();
-    // const refreshTokenExpiresIn = 7 * 24 * 60 * 60 * 1000; // 7 days in milliseconds
-    // const expireAt = new Date(Date.now() + refreshTokenExpiresIn);
     const newRefreshToken = jwt.sign({ sub: user.id }, this.privateKey, {
       algorithm: "RS256",
       expiresIn: "7d",

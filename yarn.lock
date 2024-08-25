@@ -2332,11 +2332,6 @@ forwarded@0.2.0:
   resolved "https://registry.yarnpkg.com/forwarded/-/forwarded-0.2.0.tgz#2269936428aad4c15c7ebe9779a84bf0b2a81811"
   integrity sha512-buRG0fpBtRHSTCOASe6hD258tEubFoRLb4ZNA6NxMVHNw2gOcwHo9wyablzMzOA5z9xA9L1KNjk/Nt6MT9aYow==
 
-fr@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/fr/-/fr-1.2.2.tgz#3d9d307d8945332bae333dce1e8f6f2d5c03c601"
-  integrity sha512-RekmKscMpU1+baJjbTt1Iba05+/yuEe8v5/5li1irBgGClgQ+u5EqMJH/jDhSCzLvYP+CWTOmJ6bnPqVLaC+Mg==
-
 fresh@0.5.2:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/fresh/-/fresh-0.5.2.tgz#3d8cadd90d976569fa835ab1f8e4b23a105605a7"

@@ -3,6 +3,8 @@ import { Role } from "../entities/role..entity";
 import { UpdatedResult } from "@AUTH/@types/common.type";
 import { IRole } from "@AUTH/@types/role.type";
 import { logger } from "@AUTH/utils/logger";
+import { Roles } from "@AUTH/utils/consts";
+// import { stringToEnum } from "@AUTH/utils/string-to-enum";
 
 export class RoleRepository {
   constructor(private repository: Repository<Role>) {}
@@ -22,6 +24,19 @@ export class RoleRepository {
       return await this.repository.save(newRole);
     } catch (error: unknown) {
       logger.error(`Failed to create role. Error: ${error}`);
+      throw error;
+    }
+  }
+  public async findByName(name: Roles): Promise<Role | null> {
+    try {
+      // const enumRole = stringToEnum(Roles, name);
+      console.log(`findByName: ${name}`);
+      const role = await this.repository.findOne({ where: { name } });
+      console.log("role:", role);
+
+      return role;
+    } catch (error: unknown) {
+      logger.error(`Failed to find role by name '${name}'. Error: ${error}`);
       throw error;
     }
   }

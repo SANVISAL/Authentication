@@ -11,8 +11,24 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.body;
+      // const role = req.body.role;
+    //  const role = req.params.role; // Extract role from URL parameters
       const users = await controller.register(user);
       res.json(users);
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+router.get(
+  routePath.ROLE,
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const roleName = req.params.role as string;
+      console.log("roleName:", roleName);
+      // const roleName = req.body.role;
+      const role = await controller.getRole(roleName);
+      res.json(role);
     } catch (error) {
       next(error);
     }

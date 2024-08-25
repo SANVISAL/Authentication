@@ -12,6 +12,7 @@ export class UserRepository {
   public async create(user: IUser): Promise<User> {
     try {
       const newUser = this.repository.create(user);
+      console.log("user created");
       return await this.repository.save(newUser);
     } catch (error: unknown) {
       logger.error(`Failed to create user. Error: ${error}`);
@@ -31,32 +32,6 @@ export class UserRepository {
     }
   }
 
-<<<<<<< HEAD
-=======
-  public async findByEmail(email: string): Promise<User | null> {
-    try {
-      const user = await this.repository.findOne({
-        where: { email, isDeleted: false },
-      });
-
-      return user;
-    } catch (error: unknown) {
-      logger.error(`Failed to find user by email. Error: ${error}`);
-      throw error;
-    }
-  }
-
-  public async create(user: IUser): Promise<User> {
-    try {
-      const newUser = this.repository.create(user);
-      return await this.repository.save(newUser);
-    } catch (error: unknown) {
-      logger.error(`Failed to create user. Error: ${error}`);
-      throw error;
-    }
-  }
-
->>>>>>> 172048ec996a71ecd671be97cff95668b1dd1587
   public async findAll(): Promise<User[]> {
     try {
       return await this.repository.find({ where: { isDeleted: false } });
@@ -97,6 +72,7 @@ export class UserRepository {
       });
       return user;
     } catch (error) {
+      logger.error(`Failed to find user by email: ${email}. Error: ${error}`);
       throw error;
     }
   }

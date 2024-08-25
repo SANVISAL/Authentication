@@ -6,7 +6,7 @@ import { SuccessResponse } from "@AUTH/utils/response";
 export interface IAuthResponse extends ApiResponse<IJwt> {}
 
 export interface IAuthController {
-  register(user: IUser): Promise<IAuthResponse>;
+  register(user: IUser, role :string): Promise<IAuthResponse>;
   login(user: ILoginUser): Promise<IAuthResponse>;
   logout(id: string): Promise<SuccessResponse<null>>;
 }
