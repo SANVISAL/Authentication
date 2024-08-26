@@ -27,13 +27,7 @@ export const authenticate = (
 
     next();
   } catch (error: unknown) {
-    if (error instanceof HttpException) {
-      throw error;
-    } else {
-      throw new HttpException(
-        "Unexpected error accurred.",
-        StatusCode.InternalServerError
-      );
-    }
+    logger.error(`An error occured while authenticate API keys ${error}`);
+    next(error);
   }
 };

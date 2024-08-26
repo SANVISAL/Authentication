@@ -5,6 +5,7 @@ import { ISession } from "@AUTH/@types/session.type";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
 import { logger } from "@AUTH/utils/logger";
+import { validateOrReject } from "class-validator";
 
 export class SessionRepository {
   constructor(private repository: Repository<Session>) {}
@@ -20,9 +21,12 @@ export class SessionRepository {
     }
   }
 
-  public async create(session: Partial<ISession>): Promise<Session> {
+  public async create(session: ISession): Promise<Session> {
     try {
       const newSession = this.repository.create(session);
+
+      await validateOrReject(newSession);
+
       return await this.repository.save(newSession);
     } catch (error: unknown) {
       logger.error(`Failed to create session. Error: ${error}`);
@@ -44,19 +48,24 @@ export class SessionRepository {
   public async updateById(
     id: string,
     partialSession: Partial<ISession>
-  ): Promise<UpdatedResult> {
+  ): Promise<Session | null> {
     try {
-      const existingSession = await this.findById(id);
+      // Step 1: Retrieve the entity from the database
+      const existingSession = await this.repository.findOneOrFail({
+        where: { id, isDeleted: false },
+      });
 
-      if (!existingSession) {
-        throw new HttpException("Session not found.", StatusCode.NotFound);
-      }
-      const updateResult = await this.repository.update(id, partialSession);
-      return {
-        affected: updateResult.affected,
-        generatedMaps: updateResult.generatedMaps,
-        raw: updateResult.raw,
-      };
+      // Step 2: Merge the updates into the existing entity
+      const updatedSession = this.repository.merge(
+        existingSession,
+        partialSession
+      );
+
+      // Step 3: Validate the merged entity
+      await validateOrReject(updatedSession);
+
+      // Step 4: Save the updated entity
+      return await this.repository.save(updatedSession);
     } catch (error: unknown) {
       logger.error(`Failed to update session by id: ${id}. Error: ${error}`);
       throw error;

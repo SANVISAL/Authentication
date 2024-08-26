@@ -1,5 +1,4 @@
-import { ILoginUser } from "@AUTH/@types/auth.type";
-import { IUser } from "@AUTH/@types/user.type";
+import { ILoginUser, IRegisterUser } from "@AUTH/@types/auth.type";
 import { routePath } from "@AUTH/routes";
 import { AuthService } from "@AUTH/services/auth.service";
 import { StatusCode } from "@AUTH/utils/consts";
@@ -13,9 +12,8 @@ export class AuthController implements IAuthController {
 
   @Success(StatusCode.Created, "Created")
   @Post(routePath.REGISTER)
-  public async register(user: IUser): Promise<IAuthResponse> {
+  public async register(user: IRegisterUser): Promise<IAuthResponse> {
     try {
-      console.log("role:");
       const createUser = await this.authService.register(user);
       return new SuccessResponse("", "Created", createUser);
     } catch (error: unknown) {
@@ -27,8 +25,8 @@ export class AuthController implements IAuthController {
   @Post(routePath.LOGIN)
   public async login(user: ILoginUser): Promise<IAuthResponse> {
     try {
-      const userDetails = await this.authService.login(user);
-      return new SuccessResponse("", "Logged In", userDetails);
+      const jwt = await this.authService.login(user);
+      return new SuccessResponse("", "Logged In", jwt);
     } catch (error: unknown) {
       throw error;
     }

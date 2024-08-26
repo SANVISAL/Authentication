@@ -1,5 +1,4 @@
-import { IJwt, ILoginUser } from "@AUTH/@types/auth.type";
-import { IUser } from "@AUTH/@types/user.type";
+import { IJwt, ILoginUser, IRegisterUser } from "@AUTH/@types/auth.type";
 import { RoleRepository } from "@AUTH/database/repositories/role.repository";
 import { SessionRepository } from "@AUTH/database/repositories/session.repository";
 import { UserRoleRepository } from "@AUTH/database/repositories/user-role.repository";
@@ -10,76 +9,78 @@ import { HttpException } from "@AUTH/utils/http-exception";
 import { StatusCode } from "@AUTH/utils/consts";
 import { ApiError } from "@AUTH/utils/api-error";
 import { ISession } from "@AUTH/@types/session.type";
-import { Roles, SessionStatus } from "@AUTH/utils/consts/enum-column";
+import { SessionStatus } from "@AUTH/utils/consts/enum-column";
+import { KeycloakService } from "./keycloak.service";
 
 export class AuthService implements IAuthService {
   constructor(
     private readonly userRepository: UserRepository,
     private readonly userRoleRepository: UserRoleRepository,
     private readonly roleRepository: RoleRepository,
-    private readonly sessionRepository: SessionRepository // private readonly _tokenService: TokenService
+    private readonly sessionRepository: SessionRepository
   ) {}
   logout(_token: string): Promise<void> {
     throw new Error("Method not implemented.");
-    try {
-    } catch (error) {}
   }
 
-  public async register(user: IUser): Promise<IJwt> {
+  public async register(user: IRegisterUser): Promise<IJwt> {
     try {
-      console.log("role Name:");
-      // FIND USER IN TABLE USER
-      const existedUser = await this.userRepository.findByEmail(user.email);
-      if (existedUser) {
+      const existingRole = await this.roleRepository.findByName(user.role);
+
+      if (!existingRole) {
         throw new HttpException(
-          "this email already used.",
+          "Invalid role. can't find role name.",
+          StatusCode.BadRequest
+        );
+      }
+      // 1. find existing user
+      const existingUser = await this.userRepository.findByEmail(user.email);
+
+      if (existingUser) {
+        throw new HttpException(
+          "you're already have an account.",
           StatusCode.Conflict
         );
-      }
-      const createUser = await this.userRepository.create(user);
-      if (!createUser) {
-        throw new HttpException("Invalid User", StatusCode.BadRequest);
-      }
-      //  GET DEFUALT ROLE
-      const role = await this.roleRepository.findByName(Roles.user);
-      console.log("role Name:", role?.name);
-      if (!role) {
-        throw new HttpException(
-          "Default role not found",
-          StatusCode.InternalServerError
+      } else {
+        const tokenService = new TokenService();
+
+        const hashPassword = await tokenService.hashPassword(user.password);
+        // 2. create new user
+        const newUser = await this.userRepository.create({
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          gender: user.gender,
+          password: hashPassword,
+        });
+
+        //  Add user's id and role's ID to user role
+        await this.userRoleRepository.addRoleToUser(
+          newUser.id,
+          existingRole.id
         );
+
+        const accessToken = tokenService.issueToken(newUser, existingRole.name);
+        const refreshToken = tokenService.rotateRefreshToken(newUser);
+        const expireAt = tokenService.getTokenExpiration(accessToken);
+        const session: ISession = {
+          userId: newUser.id,
+          accessToken,
+          refreshToken,
+          expireAt,
+          lastAccess: new Date(),
+          status: SessionStatus.active,
+        };
+        await this.sessionRepository.create(session);
+        const jwt = {
+          accessToken,
+          refreshToken,
+          expireAt,
+        };
+
+        return jwt;
       }
-      //  USER  ID AND ROLE ID TO TABLE USESROLE
-      await this.userRoleRepository.addRoleToUser(createUser.id, role?.id);
-
-      const tokenService = new TokenService();
-      const accessToken = tokenService.issueToken(
-        createUser,
-        role?.name as string
-      );
-      const refreshToken = tokenService.rotateRefreshToken(createUser);
-      const expireAt = tokenService.getTokenExpiration(accessToken);
-      const session: ISession = {
-        userid: createUser.id,
-        accessToken,
-        refreshToken,
-        expireAt,
-        lastAccess: new Date(),
-        status: SessionStatus.active,
-      };
-
-      await this.sessionRepository.create(session);
-      // console.log(token);
-      const jwt = {
-        accessToken,
-        refreshToken,
-        expireAt,
-      };
-
-      return jwt;
-      //
     } catch (error: unknown) {
-      console.log("service:", error);
       if (error instanceof HttpException) {
         throw error;
       }
@@ -89,43 +90,69 @@ export class AuthService implements IAuthService {
 
   public async login(user: ILoginUser): Promise<IJwt> {
     try {
-      const existedUser = await this.userRepository.findByEmail(user.email); // TABLE  USER FIND USER ID
-      if (!existedUser || existedUser.password !== user.password) {
-        throw new HttpException("Invalid credentials", StatusCode.Unauthorized);
+      const existedUser = await this.userRepository.findByEmail(user.email);
+      if (!existedUser) {
+        throw new HttpException(
+          "You're not have an account.",
+          StatusCode.Unauthorized
+        );
       }
-      const userRole = await this.userRoleRepository.findRolesForUser(
-        // TABLE USERROLE FOR FIND ROLE ID
-        existedUser.id
-      );
-      if (!userRole) {
-        throw new HttpException("Role not found", StatusCode.NotFound);
-      }
-      const roleId: string = userRole[0].roleId;
-      const role = await this.roleRepository.findById(roleId);
+
       const tokenService = new TokenService();
-      const accessToken = tokenService.issueToken(
-        existedUser,
-        role?.name as Roles
+
+      const isPasswordValid = await tokenService.comparePassword(
+        user.password,
+        existedUser.password
       );
-      const refreshToken = tokenService.rotateRefreshToken(existedUser);
-      const expireAt = tokenService.getTokenExpiration(accessToken);
-      const session: ISession = {
-        userid: existedUser.id,
-        accessToken,
-        refreshToken,
-        expireAt,
-        lastAccess: new Date(),
-        status: SessionStatus.active,
-      };
 
-      await this.sessionRepository.create(session);
-      const jwt = {
-        accessToken,
-        refreshToken,
-        expireAt,
-      };
+      if (!isPasswordValid) {
+        throw new HttpException(
+          "Your username or password is invalid.",
+          StatusCode.Unauthorized
+        );
+      } else {
+        // const userRoles = await this.userRoleRepository.findRolesForUser(
+        //   existedUser.id
+        // );
 
-      return jwt;
+        const keycloakService = new KeycloakService();
+
+        const token = await keycloakService.obtainAccessToken(user);
+
+        const jwt = {
+          accessToken: token.access_token,
+          refreshToken: token.refresh_token,
+          expireAt: token.expires_in,
+        };
+
+        return jwt;
+
+        // const roleId: string = userRoles[0].roleId;
+        // const role = await this.roleRepository.findById(roleId);
+        // const accessToken = tokenService.issueToken(
+        //   existedUser,
+        //   role?.name as string
+        // );
+        // const refreshToken = tokenService.rotateRefreshToken(existedUser);
+        // const expireAt = tokenService.getTokenExpiration(accessToken);
+        // const session: ISession = {
+        //   userId: existedUser.id,
+        //   accessToken,
+        //   refreshToken,
+        //   expireAt,
+        //   lastAccess: new Date(),
+        //   status: SessionStatus.active,
+        // };
+
+        // await this.sessionRepository.create(session);
+        // const jwt = {
+        //   accessToken,
+        //   refreshToken,
+        //   expireAt,
+        // };
+
+        // return jwt;
+      }
     } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
@@ -133,14 +160,4 @@ export class AuthService implements IAuthService {
       throw new ApiError("Failed to login.");
     }
   }
-
-  // public logout(token: string): Promise<void> {
-  //   try {
-  //   } catch (error: unknown) {
-  //     if (error instanceof HttpException) {
-  //       throw error;
-  //     }
-  //     throw new ApiError("Failed to logout.");
-  //   }
-  // // }
 }

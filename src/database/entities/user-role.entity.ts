@@ -13,11 +13,11 @@ export class UserRole {
   @IsUUID()
   roleId!: string;
 
-  @ManyToOne(() => User, (user) => user.userRoles)
+  @ManyToOne(() => User, (user) => user.userRoles, { onDelete: "CASCADE" })
   @JoinColumn({ name: "userId" })
   user!: User;
 
-  @ManyToOne(() => Role, (role) => role.userRoles)
+  @ManyToOne(() => Role, (role) => role.userRoles, { onDelete: "CASCADE" })
   @JoinColumn({ name: "roleId" })
   role!: Role;
 }
