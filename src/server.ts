@@ -3,6 +3,15 @@ import app from "./app";
 import { AppDataSource } from "./database/data-source";
 import { getConfig } from "./utils/cofig";
 import { logger, logInit } from "./utils/logger";
+import path from "path";
+import fs from "fs";
+export const privateKey = fs.readFileSync(
+  path.join(__dirname, "../privateKey.pem")
+);
+
+export const publicKey = fs.readFileSync(
+  path.join(__dirname, "../publicKey.pem")
+);
 
 async function run() {
   try {
