@@ -12,7 +12,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@CRUD_PG/*": ["src/*"]
+      "@AUTH/*": ["src/*"]
     }
   }
 }

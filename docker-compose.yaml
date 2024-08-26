@@ -13,12 +13,36 @@ services:
     ports:
       - "5432:5432"
     networks:
-      - crud_sample
+      - keycloak
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:23.0.6
+    command: start
+    environment:
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_PORT: 8080
+      KC_HOSTNAME_STRICT_BACKCHANNEL: false
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT_HTTPS: false
+      KC_HEALTH_ENABLED: true
+      KEYCLOAK_ADMIN: kc_myadmin
+      KEYCLOAK_ADMIN_PASSWORD: user@pass
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres/mydatabase
+      KC_DB_USERNAME: user_sample
+      KC_DB_PASSWORD: user@pass
+    ports:
+      - 8080:8080
+    restart: always
+    depends_on:
+      - postgres
+    networks:
+      - keycloak
 
 volumes:
   postgres-data:
     driver: local
 
 networks:
-  crud_sample:
+  keycloak:
     driver: bridge

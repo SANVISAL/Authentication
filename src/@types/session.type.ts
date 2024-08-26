@@ -1,7 +1,7 @@
 import { SessionStatus } from "@AUTH/utils/consts/enum-column";
 
 export interface ISession {
-  userid: string
+  userId: string;
   accessToken: string;
   refreshToken: string;
   expireAt: Date;

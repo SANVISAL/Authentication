@@ -3,6 +3,7 @@ import { HttpException } from "@AUTH/utils/http-exception";
 import { logger } from "@AUTH/utils/logger";
 import { UserRole } from "../entities/user-role.entity";
 import { Repository } from "typeorm";
+import { validateOrReject } from "class-validator";
 
 export class UserRoleRepository {
   constructor(private repository: Repository<UserRole>) {}
@@ -75,6 +76,9 @@ export class UserRoleRepository {
       }
 
       const newUserRole = this.repository.create({ userId, roleId });
+
+      await validateOrReject(newUserRole);
+
       return await this.repository.save(newUserRole);
     } catch (error: unknown) {
       logger.error(

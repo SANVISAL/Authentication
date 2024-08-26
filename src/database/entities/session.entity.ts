@@ -1,10 +1,4 @@
-import {
-  IsBoolean,
-  IsDate,
-  IsNotEmpty,
-  IsOptional,
-  IsUUID,
-} from "class-validator";
+import { IsBoolean, IsDate, IsNotEmpty, IsOptional } from "class-validator";
 import {
   Column,
   CreateDateColumn,
@@ -19,14 +13,12 @@ import { SessionStatus } from "@AUTH/utils/consts/enum-column";
 @Entity()
 export class Session {
   @PrimaryGeneratedColumn("uuid")
-  @IsUUID()
   id!: string;
 
   @ManyToOne(() => User, {
     eager: true,
     onDelete: "CASCADE",
   })
-  @IsNotEmpty()
   user!: User;
 
   @Column({ type: "text" })
@@ -51,8 +43,9 @@ export class Session {
   @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 
-  @UpdateDateColumn({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: true })
   @IsOptional()
+  @IsDate({ message: "Last accessed date must be a valid date!" })
   lastAccessed?: Date;
 
   @Column({

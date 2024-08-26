@@ -1,23 +1,9 @@
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
 import { privateKey, publicKey } from "@AUTH/server";
-import { HttpException } from "./http-exception";
-import { StatusCode } from "./consts";
 import { logger } from "./logger";
 import { User } from "@AUTH/database/entities/user.entity";
-// import { ICreateUser, IUser } from "@AUTH/@types/user.type";
-// import { IJwt } from "@CRUD_PG/@types/auth.type";
-// import { string } from "joi";
-
-interface TokenPayload extends JwtPayload {
-  sub: string;
-  name: string;
-  aud: string;
-  scope: string;
-  role: string;
-  iat?: number;
-  exp?: number;
-  jti: string;
-}
+import bcrypt from "bcrypt";
+import { TokenPayload } from "@AUTH/@types/auth.type";
 
 export class TokenService {
   private privateKey: Secret;
@@ -32,17 +18,17 @@ export class TokenService {
     return Math.random().toString(36).substring(7) + Date.now();
   }
 
-  public  issueToken(user: User, roleName:string): string {
-    // const role =  this.roleRepository.findByName(user.role);
+  public issueToken(user: User, roles: string): string {
     const payload: TokenPayload = {
       sub: user.id,
       name: user.firstName + " " + user.lastName,
-      role: roleName,
+      roles: roles,
       aud: "authentication",
       scope: "read:messages",
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + 60 * 15,
       jti: this.generateJti(),
+      email: user.email,
     };
     return jwt.sign(payload, this.privateKey, { algorithm: "RS256" });
   }
@@ -54,11 +40,8 @@ export class TokenService {
       }) as TokenPayload;
       return decoded;
     } catch (error) {
-      logger.info("error at file jwt:", error);
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException("Invalid token", StatusCode.BadRequest);
+      logger.error(`An error occurred while verify token. Error: ${error}`);
+      throw error;
     }
   }
   public getTokenExpiration(token: string): Date {
@@ -78,6 +61,29 @@ export class TokenService {
     });
 
     return newRefreshToken;
+  }
+
+  public async hashPassword(
+    password: string,
+    saltRounds: number = 10
+  ): Promise<string> {
+    try {
+      const hashedPassword = bcrypt.hash(password, saltRounds);
+      return hashedPassword;
+    } catch (error: unknown) {
+      throw error;
+    }
+  }
+
+  public async comparePassword(
+    password: string,
+    hashedPassword: string
+  ): Promise<boolean> {
+    try {
+      return await bcrypt.compare(password, hashedPassword);
+    } catch (error: unknown) {
+      throw error;
+    }
   }
 
   public TokenLogAction(message: string) {
