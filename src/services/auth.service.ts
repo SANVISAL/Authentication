@@ -11,7 +11,6 @@ import { StatusCode } from "@AUTH/utils/consts";
 import { ApiError } from "@AUTH/utils/api-error";
 import { ISession } from "@AUTH/@types/session.type";
 import { Roles, SessionStatus } from "@AUTH/utils/consts/enum-column";
-import { stringToEnum } from "@AUTH/utils/string-to-enum";
 
 export class AuthService implements IAuthService {
   constructor(
@@ -22,15 +21,13 @@ export class AuthService implements IAuthService {
   ) {}
   logout(_token: string): Promise<void> {
     throw new Error("Method not implemented.");
+    try {
+    } catch (error) {}
   }
 
   public async register(user: IUser): Promise<IJwt> {
     try {
       console.log("role Name:");
-
-      if (!user) {
-        throw new HttpException("Created Failse", StatusCode.BadRequest);
-      }
       // FIND USER IN TABLE USER
       const existedUser = await this.userRepository.findByEmail(user.email);
       if (existedUser) {
@@ -45,22 +42,25 @@ export class AuthService implements IAuthService {
       }
       //  GET DEFUALT ROLE
       const role = await this.roleRepository.findByName(Roles.user);
-      console.log("role Name:",role?.name);
+      console.log("role Name:", role?.name);
       if (!role) {
         throw new HttpException(
           "Default role not found",
           StatusCode.InternalServerError
         );
       }
+      //  USER  ID AND ROLE ID TO TABLE USESROLE
+      await this.userRoleRepository.addRoleToUser(createUser.id, role?.id);
 
       const tokenService = new TokenService();
       const accessToken = tokenService.issueToken(
-        createUser
-        // role?.name as string
+        createUser,
+        role?.name as string
       );
       const refreshToken = tokenService.rotateRefreshToken(createUser);
       const expireAt = tokenService.getTokenExpiration(accessToken);
       const session: ISession = {
+        userid: createUser.id,
         accessToken,
         refreshToken,
         expireAt,
@@ -100,14 +100,17 @@ export class AuthService implements IAuthService {
       if (!userRole) {
         throw new HttpException("Role not found", StatusCode.NotFound);
       }
-      // const roleid: string = userRole[0].roleId;
-      // const role = await this.roleRepository.findById(roleid); // TABLE ROLE FIND ROLE NAME
-      // const roleName = await this.roleRepository.findById(roleid);
+      const roleId: string = userRole[0].roleId;
+      const role = await this.roleRepository.findById(roleId);
       const tokenService = new TokenService();
-      const accessToken = tokenService.issueToken(existedUser);
+      const accessToken = tokenService.issueToken(
+        existedUser,
+        role?.name as Roles
+      );
       const refreshToken = tokenService.rotateRefreshToken(existedUser);
       const expireAt = tokenService.getTokenExpiration(accessToken);
       const session: ISession = {
+        userid: existedUser.id,
         accessToken,
         refreshToken,
         expireAt,
@@ -140,16 +143,4 @@ export class AuthService implements IAuthService {
   //     throw new ApiError("Failed to logout.");
   //   }
   // // }
-  async getRoleNama(roleName: string) {
-    try {
-      const enumRole = stringToEnum(Roles, roleName);
-      const role = await this.roleRepository.findByName(enumRole as Roles);
-      return role?.name;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new ApiError("Failed to get role name.");
-    }
-  }
 }

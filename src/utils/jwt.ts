@@ -13,7 +13,7 @@ interface TokenPayload extends JwtPayload {
   name: string;
   aud: string;
   scope: string;
-  // role: string;
+  role: string;
   iat?: number;
   exp?: number;
   jti: string;
@@ -32,12 +32,12 @@ export class TokenService {
     return Math.random().toString(36).substring(7) + Date.now();
   }
 
-  public  issueToken(user: User): string {
+  public  issueToken(user: User, roleName:string): string {
     // const role =  this.roleRepository.findByName(user.role);
     const payload: TokenPayload = {
       sub: user.id,
       name: user.firstName + " " + user.lastName,
-      // role: roleName,
+      role: roleName,
       aud: "authentication",
       scope: "read:messages",
       iat: Math.floor(Date.now() / 1000),

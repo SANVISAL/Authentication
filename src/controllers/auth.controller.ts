@@ -2,17 +2,14 @@ import { ILoginUser } from "@AUTH/@types/auth.type";
 import { IUser } from "@AUTH/@types/user.type";
 import { routePath } from "@AUTH/routes";
 import { AuthService } from "@AUTH/services/auth.service";
-import { Roles, StatusCode } from "@AUTH/utils/consts";
+import { StatusCode } from "@AUTH/utils/consts";
 import { SuccessResponse } from "@AUTH/utils/response";
 import { Route, Post, Get, SuccessResponse as Success } from "tsoa";
 import { IAuthController, IAuthResponse } from "./@types/auth.controller.type";
-import { stringToEnum } from "@AUTH/utils/string-to-enum";
 
 @Route("/api/v1")
 export class AuthController implements IAuthController {
-  constructor(
-    private readonly authService: AuthService
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Success(StatusCode.Created, "Created")
   @Post(routePath.REGISTER)
@@ -26,40 +23,6 @@ export class AuthController implements IAuthController {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
   @Success(StatusCode.Created, "Created")
   @Post(routePath.LOGIN)
   public async login(user: ILoginUser): Promise<IAuthResponse> {
@@ -77,17 +40,6 @@ export class AuthController implements IAuthController {
       await this.authService.logout(id);
       return new SuccessResponse("200", "Logged Out", null);
     } catch (error: unknown) {
-      throw error;
-    }
-  }
-  @Get(routePath.ROLE)
-  public async getRole(roleName: string) {
-    try {
-      console.log("roleName:", roleName);
-      const enumRole = stringToEnum(Roles, roleName);
-      const role = await this.authService.getRoleNama(enumRole as Roles);
-      return new SuccessResponse("200", "OK", role);
-    } catch (error) {
       throw error;
     }
   }
