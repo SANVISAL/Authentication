@@ -15,14 +15,20 @@ export class AuthController implements IAuthController {
   @Post(routePath.REGISTER)
   public async register(user: IUser): Promise<IAuthResponse> {
     try {
+      console.log("role:");
+      const createUser = await this.authService.register(user);
+      return new SuccessResponse("", "Created", createUser);
     } catch (error: unknown) {
       throw error;
     }
   }
+
   @Success(StatusCode.Created, "Created")
   @Post(routePath.LOGIN)
   public async login(user: ILoginUser): Promise<IAuthResponse> {
     try {
+      const userDetails = await this.authService.login(user);
+      return new SuccessResponse("", "Logged In", userDetails);
     } catch (error: unknown) {
       throw error;
     }
@@ -31,6 +37,8 @@ export class AuthController implements IAuthController {
   @Get(routePath.LOGOUT)
   public async logout(id: string): Promise<SuccessResponse<null>> {
     try {
+      await this.authService.logout(id);
+      return new SuccessResponse("200", "Logged Out", null);
     } catch (error: unknown) {
       throw error;
     }

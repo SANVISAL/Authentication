@@ -22,19 +22,6 @@ export class UserRepository {
     }
   }
 
-  public async findByEmail(email: string): Promise<User | null> {
-    try {
-      const user = await this.repository.findOne({
-        where: { email, isDeleted: false },
-      });
-
-      return user;
-    } catch (error: unknown) {
-      logger.error(`Failed to find user by email. Error: ${error}`);
-      throw error;
-    }
-  }
-
   public async create(user: IUser): Promise<User> {
     try {
       const newUser = this.repository.create(user);
@@ -78,6 +65,18 @@ export class UserRepository {
       return await this.repository.save(updatedUser);
     } catch (error: unknown) {
       logger.error(`Failed to update user by id: ${id}. Error: ${error}`);
+      throw error;
+    }
+  }
+
+  public async findByEmail(email: string): Promise<User | null> {
+    try {
+      const user = await this.repository.findOne({
+        where: { email, isDeleted: false },
+      });
+      return user;
+    } catch (error) {
+      logger.error(`Failed to find user by email: ${email}. Error: ${error}`);
       throw error;
     }
   }
