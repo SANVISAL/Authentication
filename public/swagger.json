@@ -1,0 +1,409 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+			"SuccessResponse_string_": {
+=======
+			"SuccessResponse____": {
+>>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
+=======
+			"Gender": {
+				"enum": [
+					"male",
+					"female",
+					"other",
+					"unknown"
+				],
+				"type": "string"
+			},
+			"User": {
+>>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
+=======
+			"SuccessResponse_string_": {
+>>>>>>> feature/mockdata
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+<<<<<<< HEAD
+					"result": {
+						"type": "string"
+<<<<<<< HEAD
+=======
+						"properties": {},
+						"type": "object"
+>>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
+=======
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					},
+					"isDeleted": {
+						"type": "boolean",
+						"default": false
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"sesssion": {
+						"items": {
+							"$ref": "#/components/schemas/Session"
+						},
+						"type": "array"
+					},
+					"userRoles": {
+						"items": {
+							"$ref": "#/components/schemas/UserRole"
+						},
+						"type": "array"
+>>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
+=======
+>>>>>>> feature/mockdata
+					}
+				},
+				"required": [
+					"id",
+					"firstName",
+					"lastName",
+					"email",
+					"password",
+					"createdAt",
+					"updatedAt",
+					"sesssion",
+					"userRoles"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Session": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"token": {
+						"type": "string"
+					},
+					"expireAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"isDeleted": {
+						"type": "boolean",
+						"default": false
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"id",
+					"user",
+					"token",
+					"expireAt",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Roles": {
+				"enum": [
+					"user",
+					"admin",
+					"super_admin"
+				],
+				"type": "string"
+			},
+			"UserRole": {
+				"properties": {
+					"userId": {
+						"type": "string"
+					},
+					"roleId": {
+						"type": "string"
+					},
+					"user": {
+						"$ref": "#/components/schemas/User"
+					},
+					"role": {
+						"$ref": "#/components/schemas/Role"
+					}
+				},
+				"required": [
+					"userId",
+					"roleId",
+					"user",
+					"role"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Role": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"$ref": "#/components/schemas/Roles"
+					},
+					"description": {
+						"type": "string"
+					},
+					"userRoles": {
+						"items": {
+							"$ref": "#/components/schemas/UserRole"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"userRoles"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Gender": {
+				"enum": [
+					"male",
+					"female",
+					"other",
+					"unknown"
+				],
+				"type": "string"
+			},
+			"ICreateUser": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"gender",
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginInfor": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "expressandtypescripttemplate",
+		"version": "1.0.0",
+		"license": {
+			"name": "MIT"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/api/v1/health": {
+			"get": {
+				"operationId": "CheckHealth",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+=======
+									"$ref": "#/components/schemas/SuccessResponse____"
+>>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
+=======
+									"items": {
+										"$ref": "#/components/schemas/User"
+									},
+									"type": "array"
+>>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
+=======
+									"type": "string"
+>>>>>>> feature/mockdata
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/users": {
+			"post": {
+				"operationId": "CreateUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ICreateUser"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetAllUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/{id}": {
+			"delete": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_string_"
+								}
+							}
+						}
+					}
+				},
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginInfor"
+							}
+						}
+					}
+				}
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

@@ -9,7 +9,11 @@ import { StatusCode } from "./utils/consts";
 import { logger } from "./utils/logger";
 import { ErrorResponse } from "./utils/response";
 import { exceptionHandler } from "./middlewares/exception-handler";
-
+import swaggerUi from "swagger-ui-express";
+import path from "path";
+import { ipWhitelist } from "./middlewares/ip-whitelist";
+import { routePath } from "./routes";
+import router from "./routes/v1/auth.route";
 
 const app: Application = express();
 const config = getConfig();
@@ -44,7 +48,7 @@ app.use(
 );
 
 // IP Address protector
-// app.use(ipWhitelist(["::1", "::ffff:127.0.0.1"]));
+app.use(ipWhitelist(["::1", "::ffff:127.0.0.1"]));
 
 // authenticate API keys
 // app.use(authenticate);
@@ -69,10 +73,23 @@ app.use(
 );
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
-// api routes
-// app.use(Routes.BASE, authRouter);
-// app.use(Routes.BASE, heathRouter);
+//api routes here
+app.use(routePath.BASE, router);
+// Serve the Swagger UI
+app.use(
+  "/docs",
+  swaggerUi.serve,
+  swaggerUi.setup(undefined, {
+    swaggerOptions: {
+      url: "/swagger.json", // Point to the generated Swagger JSON file
+    },
+  })
+);
 
+// Serve the generated Swagger JSON file
+app.get("/swagger.json", (_req, res) => {
+  res.sendFile(path.join(__dirname, "../public/swagger.json"));
+});
 // Catching invalid routes
 app.use("*", (req: Request, res: Response, _next: NextFunction) => {
   const fullUrl = `${req.protocol}://${req.get("host")}${req.originalUrl}`;

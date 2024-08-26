@@ -1,11 +1,11 @@
 // import { IUser, IUserResponse } from "@CRUD_PG/@types/user.type";
-// import { UserRepository } from "@CRUD_PG/database/repositories/user.repository";
+// import { UserRepository } from "@CRUD_PG/database/repositories/user-repository.sample";
 // import { ApiError } from "@CRUD_PG/utils/api-error";
-// // import { StatusCode } from "@CRUD_PG/utils/consts";
 // import { HttpException } from "@CRUD_PG/utils/http-exception";
 // import { IUserService } from "./@types/user-service.type";
 // import { SuccessResponse } from "@CRUD_PG/utils/response";
 // import { GenericResponse } from "@CRUD_PG/controllers/@types/controller.type";
+// import { StatusCode } from "@CRUD_PG/utils/consts";
 
 // export class UserService implements IUserService {
 //   private _userRepository: UserRepository;
@@ -32,10 +32,13 @@
 //     user: IUser
 //   ): Promise<SuccessResponse<GenericResponse>> {
 //     try {
-//       // const existingUser = await this._userRepository.findUserByFullName(user);
-//       // if (existingUser) {
-//       //   throw new HttpException("User already exists", StatusCode.Conflict);
-//       // }
+//       const existingUser = await this._userRepository.findByParams({
+//         email: user.email,
+//       });
+
+//       if (existingUser.length > 0) {
+//         throw new HttpException("user already exist.", StatusCode.Conflict);
+//       }
 
 //       const createdUser = await this._userRepository.create(user);
 //       return new SuccessResponse("200", "OK", {
@@ -85,9 +88,71 @@
 //   ): Promise<SuccessResponse<GenericResponse>> {
 //     try {
 //       // check if user exist
-//       await this._userRepository.findOne(id);
+//       const existUser = await this._userRepository.findOne(id);
 
-//       const updatedUser = await this._userRepository.update(id, user);
+//       const updateFields: Partial<IUser> = {};
+
+//       if (user?.firstName) {
+//         if (user?.firstName === existUser?.firstName) {
+//           throw new HttpException(
+//             "this firstname you're already used.",
+//             StatusCode.Conflict
+//           );
+//         }
+//         updateFields.firstName = user.firstName;
+//       }
+
+//       if (user?.lastName) {
+//         if (user?.lastName === existUser?.lastName) {
+//           throw new HttpException(
+//             "this lastName you're already used.",
+//             StatusCode.Conflict
+//           );
+//         }
+//         updateFields.lastName = user.lastName;
+//       }
+//       if (user?.email) {
+//         if (user?.email === existUser?.email) {
+//           throw new HttpException(
+//             "this email you're already used.",
+//             StatusCode.Conflict
+//           );
+//         }
+//         const existingEmail = await this._userRepository.findByParams({
+//           email: user.email,
+//         });
+
+//         if (existingEmail.length > 0) {
+//           throw new HttpException(
+//             "this email already used.",
+//             StatusCode.Conflict
+//           );
+//         }
+//         updateFields.email = user.email;
+//       }
+
+//       if (user?.address) {
+//         if (user?.address === existUser?.address) {
+//           throw new HttpException(
+//             "this address you're already used.",
+//             StatusCode.Conflict
+//           );
+//         }
+//         updateFields.address = user.address;
+//       }
+
+//       if (user?.gender) {
+//         if (user?.gender === existUser?.gender) {
+//           throw new HttpException(
+//             "this gender you're already used.",
+//             StatusCode.Conflict
+//           );
+//         }
+//         updateFields.gender = user.gender;
+//       }
+
+//       const updatedUser = await this._userRepository.update(id, updateFields);
+
 //       return new SuccessResponse("200", "OK", {
 //         data: updatedUser as IUserResponse,
 //       });

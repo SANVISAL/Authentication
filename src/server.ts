@@ -1,7 +1,17 @@
+import "reflect-metadata";
 import app from "./app";
-import AppDataSource from "./database";
+import { AppDataSource } from "./database/data-source";
 import { getConfig } from "./utils/cofig";
 import { logger, logInit } from "./utils/logger";
+import path from "path";
+import fs from "fs";
+export const privateKey = fs.readFileSync(
+  path.join(__dirname, "../privateKey.pem")
+);
+
+export const publicKey = fs.readFileSync(
+  path.join(__dirname, "../publicKey.pem")
+);
 
 async function run() {
   try {
@@ -12,11 +22,11 @@ async function run() {
     // Activate logger
     logInit({ env: currentEnv, logLevel: config.logLevel });
     logger.info(`SCM server has started with process id ${process.pid}`);
+    // app.ts
 
     // Initialize PostgreSQL connection using TypeORM DataSource
-    await AppDataSource.initialize();
-    logger.info("PostgreSQL connected successfully!");
-
+    const appDataSource = AppDataSource.getInstance();
+    await appDataSource.initialize();
 
     // Start server
     const server = app.listen(config.port, () => {
@@ -29,7 +39,7 @@ async function run() {
         server.close(async () => {
           logger.info("Server closed!");
           //disconnecting from a database
-          await AppDataSource.destroy();
+          await appDataSource.destroy();
           logger.info("Postgres disconnected!");
 
           process.exit(1);
@@ -57,7 +67,7 @@ async function run() {
         server.close(async () => {
           logger.info("Server closed due to SIGTERM");
 
-          await AppDataSource.destroy();
+          await appDataSource.destroy();
           logger.info("PostgreSQL disconnected!");
 
           process.exit(0);
@@ -67,13 +77,8 @@ async function run() {
       }
     });
   } catch (error: unknown) {
-    console.log("error connection: =:",error)
+    console.log("error connection: =:", error);
     logger.error("SCM Server failed!", { error });
-
-    if (AppDataSource.isInitialized) {
-      await AppDataSource.destroy();
-      logger.info("PostgreSQL disconnected!");
-    }
     process.exit(1);
   }
 }

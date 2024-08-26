@@ -11,11 +11,12 @@ function createConfig(configPath: string) {
     "PORT",
     "LOG_LEVEL",
     "DB_PORT",
-    "USERNAME",
-    "PASSWORD",
+    "DB_USERNAME",
+    "DB_PASSWORD",
     "TYPE",
     "DATABASE_NAME",
     "HOST",
+    "DB_LOG",
   ];
   const missingConfig = requiredConfig.filter((key) => !process.env[key]);
 
@@ -32,10 +33,13 @@ function createConfig(configPath: string) {
     logLevel: process.env.LOG_LEVEL,
     dbport: process.env.DB_PORT,
     type: process.env.TYPE,
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
     database: process.env.DATABASE_NAME,
     host: process.env.HOST,
+    apiKey: process.env.API_KEY,
+    apiSecret: process.env.API_SECRET,
+    dbLog: process.env.DB_LOG,
   };
 }
 
