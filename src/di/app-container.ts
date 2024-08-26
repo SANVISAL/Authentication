@@ -13,82 +13,81 @@ import { AuthService } from "@AUTH/services/auth.service";
 import { HealthService } from "@AUTH/services/health.service";
 
 export class AppContainer {
-  private static userRepository: UserRepository;
-  private static roleRepository: RoleRepository;
-  private static userRoleRepository: UserRoleRepository;
-  private static sessionRepository: SessionRepository;
-  private static healthService: HealthService;
-  private static healthController: HealthController;
-  private static authService: AuthService;
-  private static authControler: AuthController;
+  private static _userRepository: UserRepository;
+  private static _roleRepository: RoleRepository;
+  private static _userRoleRepository: UserRoleRepository;
+  private static _sessionRepository: SessionRepository;
+  private static _healthService: HealthService;
+  private static _healthController: HealthController;
+  private static _authService: AuthService;
+  private static _authController: AuthController;
 
   public static getUserRepository(): UserRepository {
-    if (!this.userRepository) {
-      this.userRepository = new UserRepository(
+    if (!this._userRepository) {
+      this._userRepository = new UserRepository(
         AppDataSource.getInstance().getRepository(User)
       );
     }
-    return this.userRepository;
+    return this._userRepository;
   }
 
   public static getUserRoleRepository(): UserRoleRepository {
-    if (!this.userRoleRepository) {
-      this.userRoleRepository = new UserRoleRepository(
+    if (!this._userRoleRepository) {
+      this._userRoleRepository = new UserRoleRepository(
         AppDataSource.getInstance().getRepository(UserRole)
       );
     }
-    return this.userRoleRepository;
+    return this._userRoleRepository;
   }
 
   public static getRoleRepository(): RoleRepository {
-    if (!this.roleRepository) {
-      this.roleRepository = new RoleRepository(
+    if (!this._roleRepository) {
+      this._roleRepository = new RoleRepository(
         AppDataSource.getInstance().getRepository(Role)
       );
     }
-    return this.roleRepository;
+    return this._roleRepository;
   }
 
   public static getSessionRepository(): SessionRepository {
-    if (!this.sessionRepository) {
-      this.sessionRepository = new SessionRepository(
+    if (!this._sessionRepository) {
+      this._sessionRepository = new SessionRepository(
         AppDataSource.getInstance().getRepository(Session)
       );
     }
-    return this.sessionRepository;
+    return this._sessionRepository;
   }
 
-  public static getHealthSerivce(): HealthService {
-    if (!this.healthService) {
-      this.healthService = new HealthService(this.getUserRepository());
+  public static getHealthService(): HealthService {
+    if (!this._healthService) {
+      this._healthService = new HealthService(this.getUserRepository());
     }
-    return this.healthService;
+    return this._healthService;
   }
 
   public static getHealthController(): HealthController {
-    if (!this.healthController) {
-      this.healthController = new HealthController(this.getHealthSerivce());
+    if (!this._healthController) {
+      this._healthController = new HealthController(this.getHealthService());
     }
-
-    return this.healthController;
+    return this._healthController;
   }
 
   public static getAuthService(): AuthService {
-    if (!this.authService) {
-      this.authService = new AuthService(
+    if (!this._authService) {
+      this._authService = new AuthService(
         this.getUserRepository(),
         this.getUserRoleRepository(),
         this.getRoleRepository(),
         this.getSessionRepository()
       );
     }
-    return this.authService;
+    return this._authService;
   }
 
   public static getAuthController(): AuthController {
-    if (!this.authControler) {
-      this.authControler = new AuthController(this.getAuthService());
+    if (!this._authController) {
+      this._authController = new AuthController(this.getAuthService());
     }
-    return this.authControler;
+    return this._authController;
   }
 }

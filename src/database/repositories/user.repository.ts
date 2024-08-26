@@ -5,6 +5,7 @@ import { HttpException } from "@AUTH/utils/http-exception";
 import { logger } from "@AUTH/utils/logger";
 import { Repository } from "typeorm";
 import { User } from "../entities/user.entity";
+import { validateOrReject } from "class-validator";
 
 export class UserRepository {
   constructor(private repository: Repository<User>) {}
@@ -37,6 +38,9 @@ export class UserRepository {
   public async create(user: IUser): Promise<User> {
     try {
       const newUser = this.repository.create(user);
+
+      await validateOrReject(newUser);
+
       return await this.repository.save(newUser);
     } catch (error: unknown) {
       logger.error(`Failed to create user. Error: ${error}`);
@@ -53,24 +57,25 @@ export class UserRepository {
     }
   }
 
+  // changes
   public async updateById(
     id: string,
     partialUser: Partial<IUser>
-  ): Promise<UpdatedResult> {
+  ): Promise<User | null> {
     try {
-      const existingUser = await this.findById(id);
+      // Step 1: Retrieve the entity from the database
+      const existingUser = await this.repository.findOneOrFail({
+        where: { id, isDeleted: false },
+      });
 
-      if (!existingUser) {
-        throw new HttpException("User not found.", StatusCode.NotFound);
-      }
+      // Step 2: Merge the updates into the existing entity
+      const updatedUser = this.repository.merge(existingUser, partialUser);
 
-      const updateResult = await this.repository.update(id, partialUser);
+      // Step 3: Validate the merged entity
+      await validateOrReject(updatedUser);
 
-      return {
-        affected: updateResult.affected,
-        generatedMaps: updateResult.generatedMaps,
-        raw: updateResult.raw,
-      };
+      // Step 4: Save the updated entity
+      return await this.repository.save(updatedUser);
     } catch (error: unknown) {
       logger.error(`Failed to update user by id: ${id}. Error: ${error}`);
       throw error;

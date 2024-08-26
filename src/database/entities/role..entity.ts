@@ -17,6 +17,6 @@ export class Role {
   @IsOptional()
   description?: string;
 
-  @OneToMany(() => UserRole, (userRole) => userRole.role)
+  @OneToMany(() => UserRole, (userRole) => userRole.role, { cascade: true })
   userRoles!: UserRole[];
 }

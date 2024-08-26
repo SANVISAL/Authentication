@@ -73,7 +73,6 @@ app.use(
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 //api routes here
-
 RegisterRoutes(app);
 
 // Serve the Swagger UI

@@ -26,7 +26,7 @@ export class Session {
     eager: true,
     onDelete: "CASCADE",
   })
-  @IsNotEmpty()
+  @IsNotEmpty({ message: "User is required!" })
   user!: User;
 
   @Column({ type: "text" })
@@ -51,8 +51,9 @@ export class Session {
   @UpdateDateColumn({ type: "timestamptz" })
   updatedAt!: Date;
 
-  @UpdateDateColumn({ type: "timestamptz" })
+  @Column({ type: "timestamptz", nullable: true })
   @IsOptional()
+  @IsDate({ message: "Last accessed date must be a valid date!" })
   lastAccessed?: Date;
 
   @Column({

@@ -38,7 +38,7 @@ class User {
   @IsEmail({}, { message: "Email must be a valid email address" })
   email!: string;
 
-  @Column({ type: "varchar", length: 100, nullable: true })
+  @Column({ type: "varchar", length: 100 })
   @IsNotEmpty({ message: "Password is required" })
   @Length(8, 50, { message: "Password must be greater than 8 characters" })
   password!: string;
@@ -62,10 +62,10 @@ class User {
   @UpdateDateColumn()
   updatedAt!: Date;
 
-  @OneToMany(() => Session, (session) => session.user)
-  sesssion!: Session[];
+  @OneToMany(() => Session, (session) => session.user, { cascade: true })
+  sesssions!: Session[];
 
-  @OneToMany(() => UserRole, (userRole) => userRole.user)
+  @OneToMany(() => UserRole, (userRole) => userRole.user, { cascade: true })
   userRoles!: UserRole[];
 }
 

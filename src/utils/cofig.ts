@@ -13,10 +13,18 @@ function createConfig(configPath: string) {
     "DB_PORT",
     "DB_USERNAME",
     "DB_PASSWORD",
-    "TYPE",
     "DATABASE_NAME",
     "HOST",
     "DB_LOG",
+    "CLIENT_ID",
+    "CLIENT_SECRET",
+    "KEYCLOAK_BASE_URL",
+    "AUTHORIZATION_ENDPOINT",
+    "TOKEN_ENDPOINT",
+    "INTROSPECTION_ENDPOINT",
+    "USERINFO_ENDPOINT",
+    "END_SESSION_ENDPOINT",
+    "JWKs_URI",
   ];
   const missingConfig = requiredConfig.filter((key) => !process.env[key]);
 
@@ -32,7 +40,6 @@ function createConfig(configPath: string) {
     port: process.env.PORT,
     logLevel: process.env.LOG_LEVEL,
     dbport: process.env.DB_PORT,
-    type: process.env.TYPE,
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
     database: process.env.DATABASE_NAME,
@@ -40,6 +47,15 @@ function createConfig(configPath: string) {
     apiKey: process.env.API_KEY,
     apiSecret: process.env.API_SECRET,
     dbLog: process.env.DB_LOG,
+    kcUrl: process.env.KEYCLOAK_BASE_URL,
+    kcAuthorization: process.env.AUTHORIZATION_ENDPOINT,
+    kcToken: process.env.TOKEN_ENDPOINT,
+    kcIntrospection: process.env.INTROSPECTION_ENDPOINT,
+    kcUserInfo: process.env.USERINFO_ENDPOINT,
+    kcEndSession: process.env.END_SESSION_ENDPOINT,
+    kcJWKs: process.env.JWKs_URI,
+    kcClientID: process.env.CLIENT_ID,
+    kcClientSecret: process.env.CLIENT_SECRET,
   };
 }
 

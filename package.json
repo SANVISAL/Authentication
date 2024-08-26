@@ -1,5 +1,5 @@
 {
-  "name": "expressandtypescripttemplate",
+  "name": "authenticationwithkeycloak",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -22,6 +22,7 @@
     "typeorm:drop": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:drop -d src/database/cli-data-source.ts"
   },
   "dependencies": {
+    "axios": "^1.7.4",
     "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "connect-pg-simple": "^9.0.1",
@@ -33,8 +34,6 @@
     "express-session": "^1.18.0",
     "helmet": "^7.1.0",
     "joi": "^17.13.3",
-    "mongodb": "^6.7.0",
-    "mongoose": "^8.4.3",
     "morgan": "^1.10.0",
     "pg": "^8.12.0",
     "reflect-metadata": "^0.2.2",
@@ -51,7 +50,6 @@
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.0",
     "@types/jest": "^29.5.12",
-    "@types/mongoose": "^5.11.97",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.12.7",
     "@types/supertest": "^6.0.2",
