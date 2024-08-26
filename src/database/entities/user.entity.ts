@@ -4,7 +4,6 @@ import {
   Length,
   IsEnum,
   IsBoolean,
-  IsUUID,
 } from "class-validator";
 import {
   Column,
@@ -21,7 +20,6 @@ import { Gender } from "@AUTH/utils/consts";
 @Entity()
 class User {
   @PrimaryGeneratedColumn("uuid")
-  @IsUUID()
   id!: string;
 
   @Column({ type: "varchar", length: 50 })
@@ -40,7 +38,6 @@ class User {
 
   @Column({ type: "varchar", length: 100 })
   @IsNotEmpty({ message: "Password is required" })
-  @Length(8, 50, { message: "Password must be greater than 8 characters" })
   password!: string;
 
   @Column({

@@ -22,7 +22,9 @@
     "typeorm:drop": "npx ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:drop -d src/database/cli-data-source.ts"
   },
   "dependencies": {
+    "@keycloak/keycloak-admin-client": "^25.0.4",
     "axios": "^1.7.4",
+    "bcrypt": "^5.1.1",
     "class-validator": "^0.14.1",
     "compression": "^1.7.4",
     "connect-pg-simple": "^9.0.1",
@@ -34,8 +36,8 @@
     "express-session": "^1.18.0",
     "helmet": "^7.1.0",
     "joi": "^17.13.3",
-    "morgan": "^1.10.0",
     "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
     "pg": "^8.12.0",
     "redis": "^4.7.0",
     "reflect-metadata": "^0.2.2",
@@ -46,6 +48,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
     "@types/compression": "^1.7.5",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",

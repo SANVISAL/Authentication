@@ -1,29 +1,38 @@
-import { IUser } from "@AUTH/@types/user.type";
 import { IKeyCloakService } from "./@types/keycloak.service.type";
 import axios from "axios";
 import { getConfig } from "@AUTH/utils/cofig";
 import { Introspection, IToken } from "@AUTH/@types/keycloak.type";
+import { ILoginUser } from "@AUTH/@types/auth.type";
+import { logger } from "@AUTH/utils/logger";
+import qs from "qs";
 
 export class KeycloakService implements IKeyCloakService {
   private readonly _config = getConfig();
 
   public constructor() {}
 
-  public async obtainAccessToken(user: IUser): Promise<IToken> {
+  public async obtainAccessToken(user: ILoginUser): Promise<IToken> {
     try {
-      const authorizationEndpoint = `${this._config.kcUrl}${this._config.kcAuthorization}`;
-      const grantType = {
+      const authorizationEndpoint = `${this._config.kcUrl}${this._config.kcToken}`;
+      const data = qs.stringify({
         grant_type: "password",
         client_id: this._config.kcClientID,
         client_secret: this._config.kcClientSecret,
-        username: user.firstName + user.lastName,
+        username: user.email,
         password: user.password,
-      };
+      });
 
-      const response = await axios.post(authorizationEndpoint, grantType);
+      const response = await axios.post(authorizationEndpoint, data, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      });
 
       return response?.data;
     } catch (error: unknown) {
+      logger.error(
+        `An error occurred while obtainAccessToken. Error: ${error}`
+      );
       throw error;
     }
   }
@@ -48,6 +57,7 @@ export class KeycloakService implements IKeyCloakService {
 
       return response?.data;
     } catch (error) {
+      logger.error(`An error occurred while validateToken. Error: ${error}`);
       throw error;
     }
   }
@@ -74,6 +84,7 @@ export class KeycloakService implements IKeyCloakService {
         message: response.statusText,
       };
     } catch (error: unknown) {
+      logger.error(`An error occurred while logout. Error: ${error}`);
       throw error;
     }
   }

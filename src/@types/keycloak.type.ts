@@ -1,6 +1,6 @@
 export interface IToken {
   access_token: string;
-  expires_in: number;
+  expires_in: Date;
   refresh_expires_in: number;
   refresh_token: string;
   token_type: string;
