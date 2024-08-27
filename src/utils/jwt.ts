@@ -18,7 +18,7 @@ export class TokenService {
     return Math.random().toString(36).substring(7) + Date.now();
   }
 
-  public issueToken(user: User, roles: string): string {
+  public issueToken(user: User, roles: string[]): string {
     const payload: TokenPayload = {
       sub: user.id,
       name: user.firstName + " " + user.lastName,

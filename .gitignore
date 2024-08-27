@@ -43,6 +43,10 @@ lerna-debug.log*
 .env.staging
 .env.uat
 
+# asymatric keys
+privateKey.pem
+publicKey.pem
+
 # temp directory
 .temp
 .tmp
