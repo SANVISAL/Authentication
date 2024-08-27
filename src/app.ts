@@ -13,6 +13,8 @@ import swaggerUi from "swagger-ui-express";
 import path from "path";
 import { ipWhitelist } from "./middlewares/ip-whitelist";
 import { RegisterRoutes } from "./routes/v1/routes";
+import { routePath } from "./routes";
+import user from "./routes/v1/user.route";
 
 const app: Application = express();
 const config = getConfig();
@@ -74,6 +76,7 @@ app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
 //api routes here
 RegisterRoutes(app);
+app.use(routePath.BASE, user);
 // Serve the Swagger UI
 app.use(
   "/docs",

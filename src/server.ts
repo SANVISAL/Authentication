@@ -6,12 +6,15 @@ import { logger, logInit } from "./utils/logger";
 import path from "path";
 import fs from "fs";
 export const privateKey = fs.readFileSync(
-  path.join(__dirname, "../privateKey.pem")
+  path.join(__dirname, "../privateKey.pem"),
+  "utf8"
 );
 
-export const publicKey = fs.readFileSync(
-  path.join(__dirname, "../publicKey.pem")
-);
+// export const publicKey = fs.readFileSync(
+//   path.join(__dirname, "../publicKey.pem"),
+//   "utf8"
+// );
+// console.log("publicKey:", publicKey);
 
 async function run() {
   try {

@@ -27,3 +27,8 @@ export interface TokenPayload extends JwtPayload {
   jti: string;
   email: string;
 }
+
+export interface DecodeUser {
+  userid: string;
+  role: string | string[];
+}
