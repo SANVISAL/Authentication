@@ -42,13 +42,4 @@ export class AuthController implements IAuthController {
       throw error;
     }
   }
-  @Get(routePath.ALLUSER)
-  public async getAllUsers() {
-    try {
-      const users = await this.authService.getAllUsers();
-      return new SuccessResponse("", "OK", users);
-    } catch (error) {
-      throw error;
-    }
-  }
 }

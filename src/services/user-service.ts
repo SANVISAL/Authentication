@@ -1,3 +1,4 @@
+import { IUser } from "@AUTH/@types/user.type";
 import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
@@ -23,7 +24,7 @@ export class UserService {
       );
     }
   }
-  public async updateProfile(userId: string, updatedUser: any) {
+  public async updateProfile(userId: string, updatedUser: IUser) {
     try {
       const user = await this.userRepository.findById(userId);
       if (!user) {

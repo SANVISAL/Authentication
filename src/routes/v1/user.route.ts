@@ -12,8 +12,7 @@ user.get(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = (req as RequestWithUser).user.userid;
-      console.log("userId: ", userId);
-      const user = await  UserController.getProfile(userId);
+      const user = await UserController.getProfile(userId);
       res.json(user);
     } catch (error) {
       console.log(error);
@@ -23,15 +22,18 @@ user.get(
 );
 
 user.put(
-  routePath.UPDATE,
+  routePath.UPDATE,authorize(["user","admin"]),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const userId = (req as RequestWithUser).user.userid;
       const updatedUser = req.body;
-      const updateUser = await UserController.updateProfile(userId, updatedUser);
+      const updateUser = await UserController.updateProfile(
+        userId,
+        updatedUser
+      );
       res.json(updateUser);
     } catch (error) {
-    console.log(error);
+      console.log(error);
       next(error);
     }
   }

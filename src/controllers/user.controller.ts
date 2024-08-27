@@ -1,8 +1,9 @@
 import { SuccessResponse } from "@AUTH/utils/response";
 
 import { UserService } from "@AUTH/services/user-service";
+import { IUser } from "@AUTH/@types/user.type";
 
-export class UserController  {
+export class UserController {
   constructor(private readonly userService: UserService) {}
 
   public async getProfile(userId: string) {
@@ -15,7 +16,7 @@ export class UserController  {
       throw error;
     }
   }
-  public async updateProfile(userId: string, updatedUser: any) {
+  public async updateProfile(userId: string, updatedUser: IUser) {
     try {
       const updatedProfile = await this.userService.updateProfile(
         userId,
