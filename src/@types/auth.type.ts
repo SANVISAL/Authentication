@@ -1,4 +1,3 @@
-import { Roles } from "@AUTH/utils/consts";
 import { IUser } from "./user.type";
 import { JwtPayload } from "jsonwebtoken";
 
@@ -8,7 +7,7 @@ export interface ILoginUser {
 }
 
 export interface IRegisterUser extends IUser {
-  role: Roles;
+  role: string[];
 }
 
 export interface IJwt {
@@ -22,7 +21,7 @@ export interface TokenPayload extends JwtPayload {
   name: string;
   aud: string;
   scope: string;
-  roles: string;
+  roles: string[];
   iat?: number;
   exp?: number;
   jti: string;
