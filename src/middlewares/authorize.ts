@@ -3,35 +3,40 @@ import { logger } from "../utils/logger";
 import { ApiError } from "@AUTH/utils/api-error";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
+import { TokenService } from "@AUTH/utils/jwt";
+import { DecodeUser } from "@AUTH/@types/auth.type";
 
 export interface RequestWithUser extends Request {
-  user: DecodedUser;
+  user: DecodeUser;
 }
 
+const tokenService = new TokenService();
 export const authorize = (requireRole: string[]) => {
   return async (req: Request, _res: Response, next: NextFunction) => {
     try {
       const token = req.headers.authorization?.split(" ")[1] as string;
-      const decoded = await decodedToken(token);
+      console.log("Token:", token);
+      const decoded = await tokenService.verifyToken(token);
+      console.log("decode:", decoded);
 
-      const { role } = decoded;
-      // const role = ["teacher", "user"];
+      const { roles } = decoded;
+      // const roles = ["teacher", "user"];
 
       logger.info(
         `User Role ${
-          Array.isArray(role) ? role.join(", ") : role
+          Array.isArray(roles) ? roles.join(", ") : roles
         } and requireRole ${requireRole} and is match ${
-          Array.isArray(role)
-            ? role.some((r) => requireRole.includes(r))
-            : requireRole.includes(role)
+          Array.isArray(roles)
+            ? roles.some((r) => requireRole.includes(r))
+            : requireRole.includes(roles)
         }`
       );
 
       let hasRequiredRole: boolean;
-      if (Array.isArray(role)) {
-        hasRequiredRole = role.some((r) => requireRole.includes(r));
+      if (Array.isArray(roles)) {
+        hasRequiredRole = roles.some((r) => requireRole.includes(r));
       } else {
-        hasRequiredRole = requireRole.includes(role);
+        hasRequiredRole = requireRole.includes(roles);
       }
 
       if (!hasRequiredRole) {
@@ -41,12 +46,17 @@ export const authorize = (requireRole: string[]) => {
         );
       }
 
-      (req as RequestWithUser).user = decoded;
-
+      // (req as RequestWithUser).user = decoded;
+      (req as RequestWithUser).user = {
+        ...decoded,
+        userid: decoded.sub, // Assuming 'sub' is the property that holds the user ID
+        role: decoded.roles, // Assuming 'roles' is the property that holds the user roles
+      };
+      // req.Id = sub; // Attach userId to the request object
       logger.info(
-        `User with role '${
-          Array.isArray(role) ? role.join(", ") : role
-        }' authorized for '${requireRole}' role`
+        `User with roles '${
+          Array.isArray(roles) ? roles.join(", ") : roles
+        }' authorized for '${requireRole}' roles`
       );
 
       next();

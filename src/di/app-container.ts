@@ -1,5 +1,6 @@
 import { AuthController } from "@AUTH/controllers/auth.controller";
 import { HealthController } from "@AUTH/controllers/health.controller";
+import { UserController } from "@AUTH/controllers/user.controller";
 import { AppDataSource } from "@AUTH/database/data-source";
 import { Role } from "@AUTH/database/entities/role..entity";
 import { Session } from "@AUTH/database/entities/session.entity";
@@ -11,6 +12,7 @@ import { UserRoleRepository } from "@AUTH/database/repositories/user-role.reposi
 import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { AuthService } from "@AUTH/services/auth.service";
 import { HealthService } from "@AUTH/services/health.service";
+import { UserService } from "@AUTH/services/user-service";
 
 export class AppContainer {
   private static _userRepository: UserRepository;
@@ -21,6 +23,8 @@ export class AppContainer {
   private static _healthController: HealthController;
   private static _authService: AuthService;
   private static _authController: AuthController;
+  private static _userService: UserService;
+  private static _userController: UserController;
 
   public static getUserRepository(): UserRepository {
     if (!this._userRepository) {
@@ -89,5 +93,17 @@ export class AppContainer {
       this._authController = new AuthController(this.getAuthService());
     }
     return this._authController;
+  }
+  public static getUserService(): UserService {
+    if (!this._userService) {
+      this._userService = new UserService(this.getUserRepository());
+    }
+    return this._userService;
+  }
+  public static getUserController(): UserController {
+    if (!this._userController) {
+      this._userController = new UserController(this.getUserService());
+    }
+    return this._userController;
   }
 }
