@@ -1,4 +1,3 @@
-
 export enum Gender {
   male = "male",
   female = "female",
@@ -17,3 +16,9 @@ export enum SessionStatus {
   expire = "expired",
   terminated = "terminated",
 }
+
+export const RoleScopes = {
+  [Roles.user]: ["read:profile"],
+  [Roles.admin]: ["read:profile", "write:profile"],
+  [Roles.superAdmin]: ["read:profile", "write:profile", "delete:profile"],
+};

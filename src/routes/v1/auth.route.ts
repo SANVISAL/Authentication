@@ -13,7 +13,7 @@ router.post(
       const user = req.body;
       // const role = req.body.role;
       //  const role = req.params.role; // Extract role from URL parameters
-      const users = await (await controller).register(user);
+      const users = await controller.register(user);
       res.json(users);
     } catch (error) {
       next(error);

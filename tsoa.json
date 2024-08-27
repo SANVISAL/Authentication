@@ -4,7 +4,23 @@
   "controllerPathGlobs": ["src/controllers/*.controller.ts"],
   "spec": {
     "outputDirectory": "public",
-    "specVersion": 3
+    "specVersion": 3,
+    "securityDefinitions": {
+      "oauth2": {
+        "type": "oauth2",
+        "description": "OAuth2 JWT Authorization",
+        "flows": {
+          "password": {
+            "tokenUrl": "/auth/token",
+            "scopes": {
+              "read:profile": "Read user profiles",
+              "write:profile": "Write user profiles",
+              "delete:profile": "Delete user profiles"
+            }
+          }
+        }
+      }
+    }
   },
   "routes": {
     "routesDir": "src/routes/v1"

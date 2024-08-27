@@ -5,7 +5,8 @@ import { ISession } from "@AUTH/@types/session.type";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
 import { logger } from "@AUTH/utils/logger";
-import { validateOrReject } from "class-validator";
+import { validateOrReject, ValidationError } from "class-validator";
+import { formatValidationErrors } from "@AUTH/utils/validation";
 
 export class SessionRepository {
   constructor(private repository: Repository<Session>) {}
@@ -21,6 +22,38 @@ export class SessionRepository {
     }
   }
 
+  public async findByAccessToken(accessToken: string): Promise<Session | null> {
+    try {
+      const session = await this.repository.findOne({
+        where: {
+          accessToken,
+        },
+      });
+
+      return session;
+    } catch (error: unknown) {
+      logger.error(`Failed to find session by access token. Error: ${error}`);
+      throw error;
+    }
+  }
+
+  public async findByRefreshToken(
+    refreshToken: string
+  ): Promise<Session | null> {
+    try {
+      const session = await this.repository.findOne({
+        where: {
+          refreshToken,
+        },
+      });
+
+      return session;
+    } catch (error: unknown) {
+      logger.error(`Failed to find session by refresh token. Error: ${error}`);
+      throw error;
+    }
+  }
+
   public async create(session: ISession): Promise<Session> {
     try {
       const newSession = this.repository.create(session);
@@ -30,6 +63,28 @@ export class SessionRepository {
       return await this.repository.save(newSession);
     } catch (error: unknown) {
       logger.error(`Failed to create session. Error: ${error}`);
+      if (Array.isArray(error)) {
+        const errorMessages = formatValidationErrors(
+          error as ValidationError[]
+        );
+
+        throw new HttpException(
+          `${errorMessages}`,
+          StatusCode.UnprocessableEntity
+        );
+      } else {
+        throw error;
+      }
+    }
+  }
+
+  public async save(session: Partial<Session>): Promise<Session | null> {
+    try {
+      const savedSession = await this.repository.save(session);
+
+      return savedSession;
+    } catch (error: unknown) {
+      logger.error(`Failed to save session. Error: ${error}`);
       throw error;
     }
   }
@@ -68,7 +123,18 @@ export class SessionRepository {
       return await this.repository.save(updatedSession);
     } catch (error: unknown) {
       logger.error(`Failed to update session by id: ${id}. Error: ${error}`);
-      throw error;
+      if (Array.isArray(error)) {
+        const errorMessages = formatValidationErrors(
+          error as ValidationError[]
+        );
+
+        throw new HttpException(
+          `${errorMessages}`,
+          StatusCode.UnprocessableEntity
+        );
+      } else {
+        throw error;
+      }
     }
   }
 

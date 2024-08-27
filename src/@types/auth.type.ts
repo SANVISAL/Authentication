@@ -7,7 +7,7 @@ export interface ILoginUser {
 }
 
 export interface IRegisterUser extends IUser {
-  role: string[];
+  roles: string[];
 }
 
 export interface IJwt {

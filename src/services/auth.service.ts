@@ -19,15 +19,12 @@ export class AuthService implements IAuthService {
     private readonly roleRepository: RoleRepository,
     private readonly sessionRepository: SessionRepository
   ) {}
-  logout(_token: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
 
   public async register(user: IRegisterUser): Promise<IJwt> {
     try {
       // Convert roles from strings to enums and retrieve corresponding roles from the database
       const roles = await Promise.all(
-        user.role.map(async (role) => {
+        user.roles.map(async (role) => {
           const enumRole = stringToEnum(Roles, role);
           const foundRole = await this.roleRepository.findByName(
             enumRole as Roles
@@ -167,6 +164,34 @@ export class AuthService implements IAuthService {
         throw error;
       }
       throw new ApiError("Login failed.");
+    }
+  }
+
+  public async logout(accessToken: string): Promise<void> {
+    // TODO
+    // 1.Validate access token
+    // 2.Invalidate the Refresh Token
+    // 3.Clear session data from session table in database
+    try {
+      const session = await this.sessionRepository.findByAccessToken(
+        accessToken
+      );
+
+      if (!session) {
+        throw new HttpException("Session not found.", StatusCode.Unauthorized);
+      }
+      session.status = SessionStatus.terminated;
+      session.isDeleted = true;
+      session.accessToken = "";
+      session.refreshToken = "";
+      session.updatedAt = new Date();
+
+      await this.sessionRepository.save(session);
+    } catch (error: unknown) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new ApiError("logout failed.");
     }
   }
 }
