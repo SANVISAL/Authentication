@@ -11,7 +11,6 @@ import { ApiError } from "@AUTH/utils/api-error";
 import { ISession } from "@AUTH/@types/session.type";
 import { Roles, SessionStatus } from "@AUTH/utils/consts/enum-column";
 import { stringToEnum } from "@AUTH/utils/string-to-enum";
-import { IUser } from "@AUTH/@types/user.type";
 
 export class AuthService implements IAuthService {
   constructor(
@@ -20,15 +19,12 @@ export class AuthService implements IAuthService {
     private readonly roleRepository: RoleRepository,
     private readonly sessionRepository: SessionRepository
   ) {}
-  logout(_token: string): Promise<void> {
-    throw new Error("Method not implemented.");
-  }
 
   public async register(user: IRegisterUser): Promise<IJwt> {
     try {
       // Convert roles from strings to enums and retrieve corresponding roles from the database
       const roles = await Promise.all(
-        user.role.map(async (role) => {
+        user.roles.map(async (role) => {
           const enumRole = stringToEnum(Roles, role);
           const foundRole = await this.roleRepository.findByName(
             enumRole as Roles
@@ -171,60 +167,31 @@ export class AuthService implements IAuthService {
     }
   }
 
-  public async getAllUsers() {
+  public async logout(accessToken: string): Promise<void> {
+    // TODO
+    // 1.Validate access token
+    // 2.Invalidate the Refresh Token
+    // 3.Clear session data from session table in database
     try {
-      const users = await this.userRepository.findAll();
-      if (!users || users.length == -0) {
-        throw new HttpException("No users found.", StatusCode.NotFound);
-      }
-      return users;
-    } catch (error) {
-      throw new ApiError("Failed to get all users.");
-    }
-  }
-  public async getUserById(userId: string) {
-    try {
-      const user = await this.userRepository.findById(userId);
-      if (!user) {
-        throw new HttpException("User not found.", StatusCode.NotFound);
-      }
-      return user;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new ApiError("Failed to get user by id.");
-    }
-  }
-  public async deleteUser(userId: string) {
-    try {
-      return this.userRepository.softDelete(userId);
-    } catch (error) {
-      throw new ApiError("Failed to delete user.");
-    }
-  }
-  public async updateUser(userId: string, updatedUser: IUser) {
-    try {
-      const user = await this.userRepository.findById(userId);
-      if (!user) {
-        throw new HttpException("User not found.", StatusCode.NotFound);
-      }
-      const updateUser = await this.userRepository.updateById(
-        userId,
-        updatedUser
+      const session = await this.sessionRepository.findByAccessToken(
+        accessToken
       );
-      if (!updateUser) {
-        throw new HttpException(
-          "Failed to update user.",
-          StatusCode.BadRequest
-        );
+
+      if (!session) {
+        throw new HttpException("Session not found.", StatusCode.Unauthorized);
       }
-      return user;
-    } catch (error) {
+      session.status = SessionStatus.terminated;
+      session.isDeleted = true;
+      session.accessToken = "";
+      session.refreshToken = "";
+      session.updatedAt = new Date();
+
+      await this.sessionRepository.save(session);
+    } catch (error: unknown) {
       if (error instanceof HttpException) {
         throw error;
       }
-      throw new ApiError("Failed to update user.");
+      throw new ApiError("logout failed.");
     }
   }
 }

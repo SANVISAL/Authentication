@@ -4,9 +4,23 @@
   "controllerPathGlobs": ["src/controllers/*.controller.ts"],
   "spec": {
     "outputDirectory": "public",
-    "specVersion": 3
+    "specVersion": 3,
+    "securityDefinitions": {
+      "api_key": {
+        "type": "apiKey",
+        "name": "x-access-token",
+        "in": "header",
+        "description": "API Key Authentication"
+      },
+      "jwt": {
+        "type": "apiKey",
+        "name": "x-access-token",
+        "in": "header"
+      }
+    }
   },
   "routes": {
+    "authenticationModule": "src/middlewares/authentication.ts",
     "routesDir": "src/routes/v1"
   },
   "compilerOptions": {

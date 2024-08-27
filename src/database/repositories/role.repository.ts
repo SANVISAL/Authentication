@@ -2,8 +2,10 @@ import { Repository } from "typeorm";
 import { Role } from "../entities/role..entity";
 import { IRole } from "@AUTH/@types/role.type";
 import { logger } from "@AUTH/utils/logger";
-import { Roles } from "@AUTH/utils/consts";
-import { validateOrReject } from "class-validator";
+import { Roles, StatusCode } from "@AUTH/utils/consts";
+import { validateOrReject, ValidationError } from "class-validator";
+import { formatValidationErrors } from "@AUTH/utils/validation";
+import { HttpException } from "@AUTH/utils/http-exception";
 
 export class RoleRepository {
   constructor(private repository: Repository<Role>) {}
@@ -37,7 +39,18 @@ export class RoleRepository {
       return await this.repository.save(newRole);
     } catch (error: unknown) {
       logger.error(`Failed to create role. Error: ${error}`);
-      throw error;
+      if (Array.isArray(error)) {
+        const errorMessages = formatValidationErrors(
+          error as ValidationError[]
+        );
+
+        throw new HttpException(
+          `${errorMessages}`,
+          StatusCode.UnprocessableEntity
+        );
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -70,7 +83,18 @@ export class RoleRepository {
       return await this.repository.save(updatedRole);
     } catch (error: unknown) {
       logger.error(`Failed to update role by id: ${id}. Error: ${error}`);
-      throw error;
+      if (Array.isArray(error)) {
+        const errorMessages = formatValidationErrors(
+          error as ValidationError[]
+        );
+
+        throw new HttpException(
+          `${errorMessages}`,
+          StatusCode.UnprocessableEntity
+        );
+      } else {
+        throw error;
+      }
     }
   }
 }
