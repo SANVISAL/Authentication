@@ -1,29 +1,33 @@
 import { SuccessResponse } from "@AUTH/utils/response";
 
-import { UserService } from "@AUTH/services/user-service";
+import { Get, Route, Security, Tags, Request } from "tsoa";
+import { routePath } from "@AUTH/routes";
+import { RequestWithUser } from "@AUTH/middlewares/authentication";
 
-export class UserController  {
-  constructor(private readonly userService: UserService) {}
+@Route("/users")
+@Tags("User")
+export class UserController {
+  constructor() {}
 
-  public async getProfile(userId: string) {
+  @Security("jwt", ["read:profile"])
+  @Get(routePath.PROFILE)
+  public async getProfile(@Request() req: Express.Request) {
     try {
-      console.log("UserID:", userId);
-      const profile = await this.userService.getProfile(userId);
-      console.log("Profile:");
-      return new SuccessResponse("", "", profile);
+      return new SuccessResponse("", "", (req as RequestWithUser).user);
     } catch (error) {
       throw error;
     }
   }
-  public async updateProfile(userId: string, updatedUser: any) {
-    try {
-      const updatedProfile = await this.userService.updateProfile(
-        userId,
-        updatedUser
-      );
-      return new SuccessResponse("", "", updatedProfile);
-    } catch (error) {
-      throw error;
-    }
-  }
+  // @Get(routePath.UPDATE)
+  // public async updateProfile(@Path() userId: string, updatedUser: any) {
+  //   try {
+  //     const updatedProfile = await this.userService.updateProfile(
+  //       userId,
+  //       updatedUser
+  //     );
+  //     return new SuccessResponse("", "", updatedProfile);
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 }

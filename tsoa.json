@@ -6,23 +6,21 @@
     "outputDirectory": "public",
     "specVersion": 3,
     "securityDefinitions": {
-      "oauth2": {
-        "type": "oauth2",
-        "description": "OAuth2 JWT Authorization",
-        "flows": {
-          "password": {
-            "tokenUrl": "/auth/token",
-            "scopes": {
-              "read:profile": "Read user profiles",
-              "write:profile": "Write user profiles",
-              "delete:profile": "Delete user profiles"
-            }
-          }
-        }
+      "api_key": {
+        "type": "apiKey",
+        "name": "x-access-token",
+        "in": "header",
+        "description": "API Key Authentication"
+      },
+      "jwt": {
+        "type": "apiKey",
+        "name": "x-access-token",
+        "in": "header"
       }
     }
   },
   "routes": {
+    "authenticationModule": "src/middlewares/authentication.ts",
     "routesDir": "src/routes/v1"
   },
   "compilerOptions": {

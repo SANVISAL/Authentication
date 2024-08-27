@@ -99,7 +99,7 @@ export class AuthController implements IAuthController {
 
   @Get(routePath.LOGOUT)
   public async logout(
-    @Header("X-access-token") token: string
+    @Header("x-access-token") token: string
   ): Promise<SuccessResponse<null>> {
     try {
       await this.authService.logout(token);

@@ -17,7 +17,11 @@ export enum SessionStatus {
   terminated = "terminated",
 }
 
-export const RoleScopes = {
+interface RoleScopesType {
+  [key: string]: string[]; // Index signature for string keys
+}
+
+export const RoleScopes: RoleScopesType = {
   [Roles.user]: ["read:profile"],
   [Roles.admin]: ["read:profile", "write:profile"],
   [Roles.superAdmin]: ["read:profile", "write:profile", "delete:profile"],

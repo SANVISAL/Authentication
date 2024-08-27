@@ -8,12 +8,9 @@ import path from "path";
 import fs from "fs";
 export class TokenService {
   private privateKey: Secret;
-  // private publicKey: Secret;
 
   constructor() {
     this.privateKey = privateKey;
-    // this.publicKey = publicKey;
-    console.log("publicKey: ", this.privateKey);
   }
 
   private generateJti(): string {
@@ -32,22 +29,18 @@ export class TokenService {
       jti: this.generateJti(),
       email: user.email,
     };
-    console.log("privatekey:", this.privateKey);
     return jwt.sign(payload, this.privateKey, { algorithm: "RS256" });
   }
 
   public async verifyToken(token: string): Promise<TokenPayload> {
     try {
-      // console.log("publicKey:", this.publicKey);
       const publicKey = fs.readFileSync(
         path.join(__dirname, "../../publicKey.pem"),
         "utf8"
       );
-      console.log("publicKey:", publicKey);
       const decoded = jwt.verify(token, publicKey, {
         algorithms: ["RS256"],
       }) as TokenPayload;
-      console.log("decode:", decoded);
       return decoded;
     } catch (error) {
       logger.error(`An error occurred while verify token. Error: ${error}`);
@@ -103,11 +96,10 @@ export class TokenService {
   //   }
   // }
 
-  public TokenLogAction(message: string) {
-    try {
-      console.log(`${new Date().toISOString()} - ${message}`);
-    } catch (error) {
-      console.error(`Failed to log token action: ${(error as Error).message}`);
-    }
-  }
+  // public TokenLogAction(message: string) {
+  //   try {
+  //   } catch (error) {
+  //     console.error(`Failed to log token action: ${(error as Error).message}`);
+  //   }
+  // }
 }
