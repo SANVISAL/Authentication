@@ -1,17 +1,19 @@
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
-import { privateKey, publicKey } from "@AUTH/server";
+import { privateKey } from "@AUTH/server";
 import { logger } from "./logger";
 import { User } from "@AUTH/database/entities/user.entity";
 import bcrypt from "bcrypt";
 import { TokenPayload } from "@AUTH/@types/auth.type";
-
+import path from "path";
+import fs from "fs";
 export class TokenService {
   private privateKey: Secret;
-  private publicKey: Secret;
+  // private publicKey: Secret;
 
   constructor() {
     this.privateKey = privateKey;
-    this.publicKey = publicKey;
+    // this.publicKey = publicKey;
+    console.log("publicKey: ", this.privateKey);
   }
 
   private generateJti(): string {
@@ -30,14 +32,22 @@ export class TokenService {
       jti: this.generateJti(),
       email: user.email,
     };
+    console.log("privatekey:", this.privateKey);
     return jwt.sign(payload, this.privateKey, { algorithm: "RS256" });
   }
 
   public async verifyToken(token: string): Promise<TokenPayload> {
     try {
-      const decoded = jwt.verify(token, this.publicKey, {
+      // console.log("publicKey:", this.publicKey);
+      const publicKey = fs.readFileSync(
+        path.join(__dirname, "../../publicKey.pem"),
+        "utf8"
+      );
+      console.log("publicKey:", publicKey);
+      const decoded = jwt.verify(token, publicKey, {
         algorithms: ["RS256"],
       }) as TokenPayload;
+      console.log("decode:", decoded);
       return decoded;
     } catch (error) {
       logger.error(`An error occurred while verify token. Error: ${error}`);
@@ -85,6 +95,13 @@ export class TokenService {
       throw error;
     }
   }
+
+  // public decodeToken() {
+  //   try {
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
 
   public TokenLogAction(message: string) {
     try {

@@ -12,6 +12,7 @@ export class UserRepository {
 
   public async findById(id: string): Promise<User | null> {
     try {
+      console.log("id:", id);
       const user = await this.repository.findOne({
         where: { id, isDeleted: false },
       });

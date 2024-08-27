@@ -14,6 +14,7 @@ export class AuthController implements IAuthController {
   @Post(routePath.REGISTER)
   public async register(user: IRegisterUser): Promise<IAuthResponse> {
     try {
+      console.log("User in controller:",user);
       const createUser = await this.authService.register(user);
       return new SuccessResponse("", "Created", createUser);
     } catch (error: unknown) {
@@ -38,6 +39,15 @@ export class AuthController implements IAuthController {
       await this.authService.logout(id);
       return new SuccessResponse("200", "Logged Out", null);
     } catch (error: unknown) {
+      throw error;
+    }
+  }
+  @Get(routePath.ALLUSER)
+  public async getAllUsers() {
+    try {
+      const users = await this.authService.getAllUsers();
+      return new SuccessResponse("", "OK", users);
+    } catch (error) {
       throw error;
     }
   }

@@ -4,4 +4,7 @@ export const routePath = {
   LOGOUT: "/auth/logout",
   HEALTH: "/health",
   REGISTER: "/auth/register",
+  ALLUSER: "/users",
+  PROFILE: "/profile",
+  UPDATE: "/update/profile",
 };

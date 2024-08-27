@@ -16,7 +16,7 @@ export class AppDataSource {
       username: this._config.username,
       password: this._config.password,
       database: this._config.database,
-      logging: this._config.dbLog === "debug",
+      // logging: this._config.dbLog === "debug",
       entities: [`${__dirname}/entities/*.entity.{ts,js}`],
       synchronize: true,
       subscribers: [],
