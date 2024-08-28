@@ -27,4 +27,13 @@ export class UserController {
       throw error;
     }
   }
+
+  public async deleteProfile(userId: string): Promise<SuccessResponse<null>> {
+    try {
+      await this.userService.deleteProfile(userId);
+      return new SuccessResponse("200", "Profile deleted successfully", null);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

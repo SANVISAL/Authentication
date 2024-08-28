@@ -6,6 +6,7 @@ export const routePath = {
   HEALTH: "/health",
   PROFILE: "/profile",
   UPDATE: "/update/profile",
+  DELETEPROFILE: "/delete/profile",
   ALLUSER: "/users",
   GETBYID: "/users/:id",
   UPDATEBYID: "/users/:id/update",
