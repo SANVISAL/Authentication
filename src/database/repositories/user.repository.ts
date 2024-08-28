@@ -5,7 +5,8 @@ import { HttpException } from "@AUTH/utils/http-exception";
 import { logger } from "@AUTH/utils/logger";
 import { Repository } from "typeorm";
 import { User } from "../entities/user.entity";
-import { validateOrReject } from "class-validator";
+import { validateOrReject, ValidationError } from "class-validator";
+import { formatValidationErrors } from "@AUTH/utils/validation";
 
 export class UserRepository {
   constructor(private repository: Repository<User>) {}
@@ -31,7 +32,19 @@ export class UserRepository {
       return await this.repository.save(newUser);
     } catch (error: unknown) {
       logger.error(`Failed to create user. Error: ${error}`);
-      throw error;
+
+      if (Array.isArray(error)) {
+        const errorMessages = formatValidationErrors(
+          error as ValidationError[]
+        );
+
+        throw new HttpException(
+          `${errorMessages}`,
+          StatusCode.UnprocessableEntity
+        );
+      } else {
+        throw error;
+      }
     }
   }
 
@@ -65,7 +78,18 @@ export class UserRepository {
       return await this.repository.save(updatedUser);
     } catch (error: unknown) {
       logger.error(`Failed to update user by id: ${id}. Error: ${error}`);
-      throw error;
+      if (Array.isArray(error)) {
+        const errorMessages = formatValidationErrors(
+          error as ValidationError[]
+        );
+
+        throw new HttpException(
+          `${errorMessages}`,
+          StatusCode.UnprocessableEntity
+        );
+      } else {
+        throw error;
+      }
     }
   }
 

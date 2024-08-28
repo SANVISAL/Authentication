@@ -3,7 +3,8 @@ import { HttpException } from "@AUTH/utils/http-exception";
 import { logger } from "@AUTH/utils/logger";
 import { UserRole } from "../entities/user-role.entity";
 import { Repository } from "typeorm";
-import { validateOrReject } from "class-validator";
+import { validateOrReject, ValidationError } from "class-validator";
+import { formatValidationErrors } from "@AUTH/utils/validation";
 
 export class UserRoleRepository {
   constructor(private repository: Repository<UserRole>) {}
@@ -84,7 +85,18 @@ export class UserRoleRepository {
       logger.error(
         `Failed to add role to user. UserId: ${userId}, RoleId: ${roleId}. Error: ${error}`
       );
-      throw error;
+      if (Array.isArray(error)) {
+        const errorMessages = formatValidationErrors(
+          error as ValidationError[]
+        );
+
+        throw new HttpException(
+          `${errorMessages}`,
+          StatusCode.UnprocessableEntity
+        );
+      } else {
+        throw error;
+      }
     }
   }
 }

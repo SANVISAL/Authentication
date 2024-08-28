@@ -1,4 +1,3 @@
-
 export enum Gender {
   male = "male",
   female = "female",
@@ -17,3 +16,13 @@ export enum SessionStatus {
   expire = "expired",
   terminated = "terminated",
 }
+
+interface RoleScopesType {
+  [key: string]: string[]; // Index signature for string keys
+}
+
+export const RoleScopes: RoleScopesType = {
+  [Roles.user]: ["read:profile", "write:profile"],
+  [Roles.admin]: ["read:profile", "write:profile"],
+  [Roles.superAdmin]: ["read:profile", "write:profile", "delete:profile"],
+};

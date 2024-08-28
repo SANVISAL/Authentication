@@ -1,24 +1,23 @@
 import jwt, { JwtPayload, Secret } from "jsonwebtoken";
-import { privateKey, publicKey } from "@AUTH/server";
+import { privateKey } from "@AUTH/server";
 import { logger } from "./logger";
 import { User } from "@AUTH/database/entities/user.entity";
 import bcrypt from "bcrypt";
 import { TokenPayload } from "@AUTH/@types/auth.type";
-
+import path from "path";
+import fs from "fs";
 export class TokenService {
   private privateKey: Secret;
-  private publicKey: Secret;
 
   constructor() {
     this.privateKey = privateKey;
-    this.publicKey = publicKey;
   }
 
   private generateJti(): string {
     return Math.random().toString(36).substring(7) + Date.now();
   }
 
-  public issueToken(user: User, roles: string): string {
+  public issueToken(user: User, roles: string[]): string {
     const payload: TokenPayload = {
       sub: user.id,
       name: user.firstName + " " + user.lastName,
@@ -35,7 +34,11 @@ export class TokenService {
 
   public async verifyToken(token: string): Promise<TokenPayload> {
     try {
-      const decoded = jwt.verify(token, this.publicKey, {
+      const publicKey = fs.readFileSync(
+        path.join(__dirname, "../../publicKey.pem"),
+        "utf8"
+      );
+      const decoded = jwt.verify(token, publicKey, {
         algorithms: ["RS256"],
       }) as TokenPayload;
       return decoded;
@@ -86,11 +89,17 @@ export class TokenService {
     }
   }
 
-  public TokenLogAction(message: string) {
-    try {
-      console.log(`${new Date().toISOString()} - ${message}`);
-    } catch (error) {
-      console.error(`Failed to log token action: ${(error as Error).message}`);
-    }
-  }
+  // public decodeToken() {
+  //   try {
+  //   } catch (error) {
+  //     throw error;
+  //   }
+  // }
+
+  // public TokenLogAction(message: string) {
+  //   try {
+  //   } catch (error) {
+  //     console.error(`Failed to log token action: ${(error as Error).message}`);
+  //   }
+  // }
 }
