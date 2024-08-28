@@ -36,6 +36,7 @@ export class UserController implements IUserController {
     try {
       const userId = (req as RequestWithUser).user?.userId as string;
 
+      console.log(userId);
       const profile = await this.userService.getProfile(userId);
 
       const userDto = new UserProfileDTO(
@@ -49,6 +50,7 @@ export class UserController implements IUserController {
 
       return new SuccessResponse(`${StatusCode.OK}`, "OK", userDto);
     } catch (error: unknown) {
+      logger.error(`An error occurred while getting profile. Error ${error}`);
       if (Array.isArray(error)) {
         const errorMessages = formatValidationErrors(
           error as ValidationError[]

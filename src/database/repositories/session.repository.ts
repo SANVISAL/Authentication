@@ -7,6 +7,7 @@ import { HttpException } from "@AUTH/utils/http-exception";
 import { logger } from "@AUTH/utils/logger";
 import { validateOrReject, ValidationError } from "class-validator";
 import { formatValidationErrors } from "@AUTH/utils/validation";
+import { SessionStatus } from "@AUTH/utils/consts/enum-column";
 
 export class SessionRepository {
   constructor(private repository: Repository<Session>) {}
@@ -27,6 +28,8 @@ export class SessionRepository {
       const session = await this.repository.findOne({
         where: {
           accessToken,
+          isDeleted: false,
+          status: SessionStatus.active,
         },
       });
 

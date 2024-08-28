@@ -16,6 +16,126 @@
 				],
 				"type": "string"
 			},
+			"UserProfileDTO": {
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"email"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponse_UserProfileDTO-Array_": {
+				"properties": {
+					"code": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									""
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"items": {
+							"$ref": "#/components/schemas/UserProfileDTO"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"code",
+					"message",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponse_UserProfileDTO_": {
+				"properties": {
+					"code": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									""
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"$ref": "#/components/schemas/UserProfileDTO"
+					}
+				},
+				"required": [
+					"code",
+					"message",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponse_null_": {
+				"properties": {
+					"code": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									""
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"code",
+					"message",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"User": {
 				"properties": {
 					"id": {
@@ -290,126 +410,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponse_null_": {
-				"properties": {
-					"code": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "string",
-								"enum": [
-									""
-								]
-							}
-						]
-					},
-					"message": {
-						"type": "string"
-					},
-					"result": {
-						"type": "number",
-						"enum": [
-							null
-						],
-						"nullable": true
-					}
-				},
-				"required": [
-					"code",
-					"message",
-					"result"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"UserProfileDTO": {
-				"properties": {
-					"firstName": {
-						"type": "string"
-					},
-					"lastName": {
-						"type": "string"
-					},
-					"email": {
-						"type": "string"
-					},
-					"gender": {
-						"$ref": "#/components/schemas/Gender"
-					}
-				},
-				"required": [
-					"firstName",
-					"lastName",
-					"email"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponse_UserProfileDTO-Array_": {
-				"properties": {
-					"code": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "string",
-								"enum": [
-									""
-								]
-							}
-						]
-					},
-					"message": {
-						"type": "string"
-					},
-					"result": {
-						"items": {
-							"$ref": "#/components/schemas/UserProfileDTO"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"code",
-					"message",
-					"result"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"SuccessResponse_UserProfileDTO_": {
-				"properties": {
-					"code": {
-						"anyOf": [
-							{
-								"type": "string"
-							},
-							{
-								"type": "string",
-								"enum": [
-									""
-								]
-							}
-						]
-					},
-					"message": {
-						"type": "string"
-					},
-					"result": {
-						"$ref": "#/components/schemas/UserProfileDTO"
-					}
-				},
-				"required": [
-					"code",
-					"message",
-					"result"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"Partial_IUpdateUser_": {
 				"properties": {
 					"firstName": {
@@ -449,6 +449,109 @@
 		"contact": {}
 	},
 	"paths": {
+		"/api/v1/users": {
+			"get": {
+				"operationId": "GetAllUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile",
+							"write:profile"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/{userId}": {
+			"get": {
+				"operationId": "GetUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile",
+							"write:profile"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_null_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile",
+							"write:profile"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
 		"/api/v1/health": {
 			"get": {
 				"operationId": "CheckHealth",
@@ -569,112 +672,7 @@
 				]
 			}
 		},
-		"/api/v1/users": {
-			"get": {
-				"operationId": "GetAllUsers",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO-Array_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"jwt": [
-							"read:profile",
-							"write:profile"
-						]
-					}
-				],
-				"parameters": []
-			}
-		},
-		"/api/v1/users/{userId}": {
-			"get": {
-				"operationId": "GetUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"jwt": [
-							"read:profile",
-							"write:profile"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/api/v1/users/{userId}/delete": {
-			"delete": {
-				"operationId": "DeleteUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_null_"
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Admin"
-				],
-				"security": [
-					{
-						"jwt": [
-							"read:profile",
-							"write:profile"
-						]
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "userId",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
-			}
-		},
-		"/api/v1/users/profile": {
+		"/api/v1/profile": {
 			"get": {
 				"operationId": "GetProfile",
 				"responses": {
@@ -700,9 +698,7 @@
 					}
 				],
 				"parameters": []
-			}
-		},
-		"/api/v1/users/update": {
+			},
 			"put": {
 				"operationId": "UpdateProfile",
 				"responses": {

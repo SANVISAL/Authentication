@@ -1,7 +1,7 @@
 import { routePath } from "@AUTH/routes";
 import { AdminService } from "@AUTH/services/admin.service";
 import { SuccessResponse } from "@AUTH/utils/response";
-import { Delete, Get, Path, Route, Security, Tags } from "tsoa";
+import { Delete, Get, Path, Request, Route, Security, Tags } from "tsoa";
 import { IAdminController } from "./@types/admin.controller";
 import { UserProfileDTO } from "@AUTH/dto/user.dto";
 import { validateOrReject, ValidationError } from "class-validator";
@@ -9,6 +9,7 @@ import { StatusCode } from "@AUTH/utils/consts";
 import { formatValidationErrors } from "@AUTH/utils/validation";
 import { logger } from "@AUTH/utils/logger";
 import { ApiError } from "@AUTH/utils/api-error";
+import { RequestWithUser } from "@AUTH/middlewares/authentication";
 
 @Route("/api/v1")
 @Tags("Admin")
@@ -39,9 +40,11 @@ export class AdminController implements IAdminController {
   @Security("jwt", ["read:profile", "write:profile"])
   @Get(routePath.GETBYID)
   public async getUser(
-    @Path() userId: string
+    @Path() userId: string,
+    @Request() req: Express.Request
   ): Promise<SuccessResponse<UserProfileDTO>> {
     try {
+      console.log((req as RequestWithUser).user?.userId);
       const user = await this.adminService.getUserById(userId);
 
       const userDto = new UserProfileDTO(
