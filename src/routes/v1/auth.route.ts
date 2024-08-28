@@ -11,9 +11,6 @@ router.post(
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const user = req.body;
-      console.log("user:", user);
-      // const role = req.body.role;
-      //  const role = req.params.role; // Extract role from URL parameters
       const users = await controller.register(user);
       res.json(users);
     } catch (error) {
