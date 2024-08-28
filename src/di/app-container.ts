@@ -102,7 +102,7 @@ export class AppContainer {
   }
   public static getUserController(): UserController {
     if (!this._userController) {
-      this._userController = new UserController();
+      this._userController = new UserController(this.getUserService());
     }
     return this._userController;
   }

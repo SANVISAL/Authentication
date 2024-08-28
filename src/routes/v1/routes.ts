@@ -180,17 +180,18 @@ const models: TsoaRoute.Models = {
     additionalProperties: false,
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  DecodeUser: {
+  UserProfileDTO: {
     dataType: "refObject",
     properties: {
-      userid: { dataType: "string" },
-      roles: { dataType: "array", array: { dataType: "string" } },
-      scopes: { dataType: "array", array: { dataType: "any" } },
+      firstName: { dataType: "string", required: true },
+      lastName: { dataType: "string", required: true },
+      email: { dataType: "string", required: true },
+      gender: { ref: "Gender", default: "unknown" },
     },
     additionalProperties: false,
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-  SuccessResponse_DecodeUser_: {
+  SuccessResponse_UserProfileDTO_: {
     dataType: "refObject",
     properties: {
       code: {
@@ -199,9 +200,22 @@ const models: TsoaRoute.Models = {
         required: true,
       },
       message: { dataType: "string", required: true },
-      result: { ref: "DecodeUser", required: true },
+      result: { ref: "UserProfileDTO", required: true },
     },
     additionalProperties: false,
+  },
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  Partial_IUpdateUser_: {
+    dataType: "refAlias",
+    type: {
+      dataType: "nestedObjectLiteral",
+      nestedProperties: {
+        firstName: { dataType: "string" },
+        lastName: { dataType: "string" },
+        gender: { ref: "Gender" },
+      },
+      validators: {},
+    },
   },
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -387,7 +401,7 @@ export function RegisterRoutes(app: Router) {
   );
   // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
   app.get(
-    "/users/profile",
+    "/api/v1/users/profile",
     authenticateMiddleware([{ jwt: ["read:profile"] }]),
     ...fetchMiddlewares<RequestHandler>(UserController),
     ...fetchMiddlewares<RequestHandler>(UserController.prototype.getProfile),
@@ -411,10 +425,57 @@ export function RegisterRoutes(app: Router) {
           response,
         });
 
-        const controller = new UserController();
+        const controller = AppContainer.getUserController();
 
         await templateService.apiHandler({
           methodName: "getProfile",
+          controller,
+          response,
+          next,
+          validatedArgs,
+          successStatus: undefined,
+        });
+      } catch (err) {
+        return next(err);
+      }
+    }
+  );
+  // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+  app.put(
+    "/api/v1/users/update",
+    authenticateMiddleware([{ jwt: ["read:profile", "write:profile"] }]),
+    ...fetchMiddlewares<RequestHandler>(UserController),
+    ...fetchMiddlewares<RequestHandler>(UserController.prototype.updateProfile),
+
+    async function UserController_updateProfile(
+      request: ExRequest,
+      response: ExResponse,
+      next: any
+    ) {
+      const args: Record<string, TsoaRoute.ParameterSchema> = {
+        req: { in: "request", name: "req", required: true, dataType: "object" },
+        user: {
+          in: "body",
+          name: "user",
+          required: true,
+          ref: "Partial_IUpdateUser_",
+        },
+      };
+
+      // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+      let validatedArgs: any[] = [];
+      try {
+        validatedArgs = templateService.getValidatedArgs({
+          args,
+          request,
+          response,
+        });
+
+        const controller = AppContainer.getUserController();
+
+        await templateService.apiHandler({
+          methodName: "updateProfile",
           controller,
           response,
           next,

@@ -1,26 +1,21 @@
 import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
+import { logger } from "@AUTH/utils/logger";
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async getProfile(userId: string) {
     try {
-      console.log("userId: ", userId);
       const profile = await this.userRepository.findById(userId);
       if (!profile) {
-        throw new HttpException("Not Found", StatusCode.NotFound);
+        throw new HttpException("Not Found user.", StatusCode.NotFound);
       }
       return profile;
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        "Fail To Get Profile",
-        StatusCode.InternalServerError
-      );
+      logger.error(`An error occurred while get profile user. Errror ${error}`);
+      throw error;
     }
   }
   public async updateProfile(userId: string, updatedUser: any) {
@@ -41,13 +36,8 @@ export class UserService {
       }
       return updateUser;
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        "Fail To Update Profile",
-        StatusCode.InternalServerError
-      );
+      logger.error(`An error occurred while get profile user. Errror ${error}`);
+      throw error;
     }
   }
 }

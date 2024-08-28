@@ -22,7 +22,7 @@ interface RoleScopesType {
 }
 
 export const RoleScopes: RoleScopesType = {
-  [Roles.user]: ["read:profile"],
+  [Roles.user]: ["read:profile", "write:profile"],
   [Roles.admin]: ["read:profile", "write:profile"],
   [Roles.superAdmin]: ["read:profile", "write:profile", "delete:profile"],
 };

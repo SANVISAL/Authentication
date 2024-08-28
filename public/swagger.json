@@ -324,26 +324,30 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"DecodeUser": {
+			"UserProfileDTO": {
 				"properties": {
-					"userid": {
+					"firstName": {
 						"type": "string"
 					},
-					"roles": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
+					"lastName": {
+						"type": "string"
 					},
-					"scopes": {
-						"items": {},
-						"type": "array"
+					"email": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
 					}
 				},
+				"required": [
+					"firstName",
+					"lastName",
+					"email"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"SuccessResponse_DecodeUser_": {
+			"SuccessResponse_UserProfileDTO_": {
 				"properties": {
 					"code": {
 						"anyOf": [
@@ -362,7 +366,7 @@
 						"type": "string"
 					},
 					"result": {
-						"$ref": "#/components/schemas/DecodeUser"
+						"$ref": "#/components/schemas/UserProfileDTO"
 					}
 				},
 				"required": [
@@ -372,6 +376,21 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"Partial_IUpdateUser_": {
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
 			}
 		},
 		"securitySchemes": {
@@ -514,7 +533,7 @@
 				]
 			}
 		},
-		"/users/profile": {
+		"/api/v1/users/profile": {
 			"get": {
 				"operationId": "GetProfile",
 				"responses": {
@@ -523,7 +542,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_DecodeUser_"
+									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO_"
 								}
 							}
 						}
@@ -540,6 +559,45 @@
 					}
 				],
 				"parameters": []
+			}
+		},
+		"/api/v1/users/update": {
+			"put": {
+				"operationId": "UpdateProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile",
+							"write:profile"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_IUpdateUser_"
+							}
+						}
+					}
+				}
 			}
 		}
 	},

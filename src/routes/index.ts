@@ -5,6 +5,6 @@ export const routePath = {
   HEALTH: "/health",
   REGISTER: "/auth/register",
   ALLUSER: "/users",
-  PROFILE: "/profile",
-  UPDATE: "/update/profile",
+  PROFILE: "users/profile",
+  UPDATE: "users/update",
 };
