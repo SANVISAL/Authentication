@@ -1,4 +1,5 @@
 import { DecodeUser } from "@AUTH/@types/auth.type";
+import { AppContainer } from "@AUTH/di/app-container";
 import { ApiError } from "@AUTH/utils/api-error";
 import { StatusCode } from "@AUTH/utils/consts";
 import { RoleScopes } from "@AUTH/utils/consts/enum-column";
@@ -33,7 +34,15 @@ export const expressAuthentication = async (
   try {
     decoded = await tokenService.verifyToken(token);
   } catch (error) {
-    throw new HttpException("Invalid token", StatusCode.Unauthorized);
+    throw new HttpException("Invalid token provided.", StatusCode.Unauthorized);
+  }
+
+  const sessionRepo = AppContainer.getSessionRepository();
+
+  const availableToken = await sessionRepo.findByAccessToken(token);
+
+  if (!availableToken) {
+    throw new HttpException("Invalid token provided.", StatusCode.Unauthorized);
   }
 
   const { roles } = decoded;
@@ -54,10 +63,10 @@ export const expressAuthentication = async (
         StatusCode.Forbidden
       );
     }
-    return {
-      userId: decoded.sub,
-      roles,
-      scopes: uniqueScopes,
-    };
   }
+  return {
+    userId: decoded.sub,
+    roles,
+    scopes: uniqueScopes,
+  };
 };
