@@ -1,14 +1,14 @@
 import { IUser } from "@AUTH/@types/user.type";
+import { User } from "@AUTH/database/entities/user.entity";
 import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
 import { logger } from "@AUTH/utils/logger";
-import { SuccessResponse } from "@AUTH/utils/response";
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async getProfile(userId: string) {
+  public async getProfile(userId: string): Promise<User> {
     try {
       console.log("userId: ", userId);
       const profile = await this.userRepository.findById(userId);
@@ -21,7 +21,10 @@ export class UserService {
       throw error;
     }
   }
-  public async updateProfile(userId: string, updatedUser: IUser) {
+  public async updateProfile(
+    userId: string,
+    updatedUser: IUser
+  ): Promise<IUser> {
     try {
       const user = await this.userRepository.findById(userId);
       if (!user) {

@@ -1,10 +1,12 @@
+import { IUser } from "@AUTH/@types/user.type";
+import { User } from "@AUTH/database/entities/user.entity";
 import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
 
 export class AdminService {
   constructor(private readonly userRepository: UserRepository) {}
-  public async getAllUsers() {
+  public async getAllUsers(): Promise<User[]> {
     try {
       const users = await this.userRepository.findAll();
       if (!users || users.length === 0) {
@@ -18,7 +20,7 @@ export class AdminService {
       throw new HttpException("", StatusCode.InternalServerError);
     }
   }
-  public async getUserById(userId: string) {
+  public async getUserById(userId: string): Promise<IUser> {
     try {
       const user = await this.userRepository.findById(userId);
       if (!user) {
