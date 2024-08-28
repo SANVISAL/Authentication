@@ -7,7 +7,7 @@ export interface ILoginUser {
 }
 
 export interface IRegisterUser extends IUser {
-  role: string[];
+  roles: string[];
 }
 
 export interface IJwt {
@@ -29,6 +29,7 @@ export interface TokenPayload extends JwtPayload {
 }
 
 export interface DecodeUser {
-  userid: string;
-  role: string | string[];
+  userId?: string;
+  roles?: string[];
+  scopes?: any[];
 }

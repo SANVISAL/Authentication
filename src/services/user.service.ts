@@ -1,5 +1,4 @@
-import { IUser } from "@AUTH/@types/user.type";
-import { User } from "@AUTH/database/entities/user.entity";
+import { IUpdateUser } from "@AUTH/@types/user.type";
 import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
@@ -8,23 +7,22 @@ import { logger } from "@AUTH/utils/logger";
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  public async getProfile(userId: string): Promise<User> {
+  public async getProfile(userId: string) {
     try {
-      console.log("userId: ", userId);
       const profile = await this.userRepository.findById(userId);
       if (!profile) {
-        throw new HttpException("Not Found User!", StatusCode.NotFound);
+        throw new HttpException("Not Found user.", StatusCode.NotFound);
       }
       return profile;
     } catch (error) {
-      logger.info("Get Profile Error", error);
+      logger.error(`An error occurred while get profile user. Errror ${error}`);
       throw error;
     }
   }
   public async updateProfile(
     userId: string,
-    updatedUser: IUser
-  ): Promise<IUser> {
+    updatedUser: Partial<IUpdateUser>
+  ) {
     try {
       const user = await this.userRepository.findById(userId);
       if (!user) {
@@ -42,14 +40,7 @@ export class UserService {
       }
       return updateUser;
     } catch (error) {
-      logger.info("Update Profile Error", error);
-      throw error;
-    }
-  }
-  public async deleteProfile(userId: string) {
-    try {
-      return await this.userRepository.softDelete(userId);
-    } catch (error) {
+      logger.error(`An error occurred while get profile user. Errror ${error}`);
       throw error;
     }
   }

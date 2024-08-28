@@ -7,14 +7,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-			"SuccessResponse_string_": {
-=======
-			"SuccessResponse____": {
->>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
-=======
 			"Gender": {
 				"enum": [
 					"male",
@@ -25,23 +17,10 @@
 				"type": "string"
 			},
 			"User": {
->>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
-=======
-			"SuccessResponse_string_": {
->>>>>>> feature/mockdata
 				"properties": {
 					"id": {
 						"type": "string"
 					},
-<<<<<<< HEAD
-					"result": {
-						"type": "string"
-<<<<<<< HEAD
-=======
-						"properties": {},
-						"type": "object"
->>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
-=======
 					"firstName": {
 						"type": "string"
 					},
@@ -69,7 +48,7 @@
 						"type": "string",
 						"format": "date-time"
 					},
-					"sesssion": {
+					"sesssions": {
 						"items": {
 							"$ref": "#/components/schemas/Session"
 						},
@@ -80,9 +59,6 @@
 							"$ref": "#/components/schemas/UserRole"
 						},
 						"type": "array"
->>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
-=======
->>>>>>> feature/mockdata
 					}
 				},
 				"required": [
@@ -93,11 +69,19 @@
 					"password",
 					"createdAt",
 					"updatedAt",
-					"sesssion",
+					"sesssions",
 					"userRoles"
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"SessionStatus": {
+				"enum": [
+					"active",
+					"expired",
+					"terminated"
+				],
+				"type": "string"
 			},
 			"Session": {
 				"properties": {
@@ -107,7 +91,10 @@
 					"user": {
 						"$ref": "#/components/schemas/User"
 					},
-					"token": {
+					"accessToken": {
+						"type": "string"
+					},
+					"refreshToken": {
 						"type": "string"
 					},
 					"expireAt": {
@@ -125,12 +112,19 @@
 					"updatedAt": {
 						"type": "string",
 						"format": "date-time"
+					},
+					"lastAccessed": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"status": {
+						"$ref": "#/components/schemas/SessionStatus"
 					}
 				},
 				"required": [
 					"id",
 					"user",
-					"token",
+					"accessToken",
 					"expireAt",
 					"createdAt",
 					"updatedAt"
@@ -195,20 +189,229 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Gender": {
-				"enum": [
-					"male",
-					"female",
-					"other",
-					"unknown"
-				],
-				"type": "string"
-			},
-			"ICreateUser": {
+			"TokenResponseDTO": {
 				"properties": {
-					"id": {
+					"accessToken": {
 						"type": "string"
 					},
+					"refreshToken": {
+						"type": "string"
+					},
+					"expireAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"accessToken",
+					"expireAt"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponse_TokenResponseDTO_": {
+				"properties": {
+					"code": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									""
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"$ref": "#/components/schemas/TokenResponseDTO"
+					}
+				},
+				"required": [
+					"code",
+					"message",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IRegisterUser": {
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					},
+					"password": {
+						"type": "string"
+					},
+					"roles": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"email",
+					"gender",
+					"password",
+					"roles"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ILoginUser": {
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"email",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponse_null_": {
+				"properties": {
+					"code": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									""
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"type": "number",
+						"enum": [
+							null
+						],
+						"nullable": true
+					}
+				},
+				"required": [
+					"code",
+					"message",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserProfileDTO": {
+				"properties": {
+					"firstName": {
+						"type": "string"
+					},
+					"lastName": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"gender": {
+						"$ref": "#/components/schemas/Gender"
+					}
+				},
+				"required": [
+					"firstName",
+					"lastName",
+					"email"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponse_UserProfileDTO-Array_": {
+				"properties": {
+					"code": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									""
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"items": {
+							"$ref": "#/components/schemas/UserProfileDTO"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"code",
+					"message",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SuccessResponse_UserProfileDTO_": {
+				"properties": {
+					"code": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									""
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					},
+					"result": {
+						"$ref": "#/components/schemas/UserProfileDTO"
+					}
+				},
+				"required": [
+					"code",
+					"message",
+					"result"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Partial_IUpdateUser_": {
+				"properties": {
 					"firstName": {
 						"type": "string"
 					},
@@ -217,45 +420,28 @@
 					},
 					"gender": {
 						"$ref": "#/components/schemas/Gender"
-					},
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
 					}
 				},
-				"required": [
-					"firstName",
-					"lastName",
-					"gender",
-					"email",
-					"password"
-				],
 				"type": "object",
-				"additionalProperties": false
-			},
-			"LoginInfor": {
-				"properties": {
-					"email": {
-						"type": "string"
-					},
-					"password": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"email",
-					"password"
-				],
-				"type": "object",
-				"additionalProperties": false
+				"description": "Make all properties in T optional"
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"api_key": {
+				"type": "apiKey",
+				"name": "x-access-token",
+				"in": "header",
+				"description": "API Key Authentication"
+			},
+			"jwt": {
+				"type": "apiKey",
+				"name": "x-access-token",
+				"in": "header"
+			}
+		}
 	},
 	"info": {
-		"title": "expressandtypescripttemplate",
+		"title": "authenticationwithkeycloak",
 		"version": "1.0.0",
 		"license": {
 			"name": "MIT"
@@ -272,46 +458,40 @@
 						"content": {
 							"application/json": {
 								"schema": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-									"$ref": "#/components/schemas/SuccessResponse_string_"
-=======
-									"$ref": "#/components/schemas/SuccessResponse____"
->>>>>>> db0fbe1e0affaeac8d1347219f9363e6721c166e
-=======
 									"items": {
 										"$ref": "#/components/schemas/User"
 									},
 									"type": "array"
->>>>>>> 209dcf86d55cc0ec0b75fa19bb00c38ebe59c93b
-=======
-									"type": "string"
->>>>>>> feature/mockdata
 								}
 							}
 						}
 					}
 				},
+				"tags": [
+					"Health"
+				],
 				"security": [],
 				"parameters": []
 			}
 		},
-		"/api/v1/users": {
+		"/api/v1/auth/register": {
 			"post": {
-				"operationId": "CreateUser",
+				"operationId": "Register",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_string_"
+									"$ref": "#/components/schemas/SuccessResponse_TokenResponseDTO_"
 								}
 							}
 						}
 					}
 				},
+				"tags": [
+					"Authentication"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -319,56 +499,11 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ICreateUser"
+								"$ref": "#/components/schemas/IRegisterUser"
 							}
 						}
 					}
 				}
-			},
-			"get": {
-				"operationId": "GetAllUsers",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_string_"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": []
-			}
-		},
-		"/api/v1/users/{id}": {
-			"delete": {
-				"operationId": "DeleteUser",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_string_"
-								}
-							}
-						}
-					}
-				},
-				"security": [],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"type": "string"
-						}
-					}
-				]
 			}
 		},
 		"/api/v1/auth/login": {
@@ -380,12 +515,15 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/SuccessResponse_string_"
+									"$ref": "#/components/schemas/SuccessResponse_TokenResponseDTO_"
 								}
 							}
 						}
 					}
 				},
+				"tags": [
+					"Authentication"
+				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
@@ -393,7 +531,210 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/LoginInfor"
+								"$ref": "#/components/schemas/ILoginUser"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/v1/auth/logout": {
+			"get": {
+				"operationId": "Logout",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_null_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Authentication"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "header",
+						"name": "x-access-token",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/users": {
+			"get": {
+				"operationId": "GetAllUsers",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO-Array_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile",
+							"write:profile"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/{userId}": {
+			"get": {
+				"operationId": "GetUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile",
+							"write:profile"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/users/{userId}/delete": {
+			"delete": {
+				"operationId": "DeleteUser",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_null_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Admin"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile",
+							"write:profile"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "userId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/api/v1/users/profile": {
+			"get": {
+				"operationId": "GetProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile"
+						]
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/api/v1/users/update": {
+			"put": {
+				"operationId": "UpdateProfile",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SuccessResponse_UserProfileDTO_"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"User"
+				],
+				"security": [
+					{
+						"jwt": [
+							"read:profile",
+							"write:profile"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_IUpdateUser_"
 							}
 						}
 					}

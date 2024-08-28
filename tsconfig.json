@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "lib": ["dom", "ES2015"],
+    "lib": ["dom", "ES2021"],
     "types": ["reflect-metadata"],
     "module": "commonjs",
     "baseUrl": ".",
@@ -33,14 +33,15 @@
     ],
     "paths": {
       "@AUTH/*": ["src/*"],
-      "tsoa": [
-        "node_modules/tsoa/dist"
-      ],
-      "tsoa/": [
-        "node_modules/tsoa/dist/"
-      ]
+      "tsoa": ["node_modules/tsoa/dist"],
+      "tsoa/": ["node_modules/tsoa/dist/"]
     }
   },
-  "include": ["src/**/*.ts", "test/**/*.ts", "src/utils/@types/logger.type/ts", "src/views/indexts"],
+  "include": [
+    "src/**/*.ts",
+    "test/**/*.ts",
+    "src/utils/@types/logger.type/ts",
+    "src/views/indexts"
+  ],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
