@@ -9,6 +9,7 @@ export class UserService {
 
   public async getProfile(userId: string) {
     try {
+      logger.info(userId);
       const profile = await this.userRepository.findById(userId);
       if (!profile) {
         throw new HttpException("Not Found user.", StatusCode.NotFound);
