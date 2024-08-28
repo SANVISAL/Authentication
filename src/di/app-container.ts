@@ -14,7 +14,7 @@ import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { AdminService } from "@AUTH/services/admin.service";
 import { AuthService } from "@AUTH/services/auth.service";
 import { HealthService } from "@AUTH/services/health.service";
-import { UserService } from "@AUTH/services/user-service";
+import { UserService } from "@AUTH/services/user.service";
 
 export class AppContainer {
   private static _userRepository: UserRepository;
@@ -106,19 +106,19 @@ export class AppContainer {
   }
   public static getUserController(): UserController {
     if (!this._userController) {
-      this._userController = new UserController();
+      this._userController = new UserController(this.getUserService());
     }
     return this._userController;
   }
 
   public static getAdminService(): AdminService {
-    if (this._adminService) {
+    if (!this._adminService) {
       this._adminService = new AdminService(this.getUserRepository());
     }
     return this._adminService;
   }
   public static getAdminController(): AdminController {
-    if (this._adminController) {
+    if (!this._adminController) {
       this._adminController = new AdminController(this.getAdminService());
     }
     return this._adminController;

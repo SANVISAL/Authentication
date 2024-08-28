@@ -1,6 +1,7 @@
 import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
+import { logger } from "@AUTH/utils/logger";
 
 export class AdminService {
   constructor(private readonly userRepository: UserRepository) {}
@@ -12,10 +13,8 @@ export class AdminService {
       }
       return users;
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException("", StatusCode.InternalServerError);
+      logger.error(`An error occurred while get all users. Errror ${error}`);
+      throw error;
     }
   }
   public async getUserById(userId: string) {
@@ -26,26 +25,16 @@ export class AdminService {
       }
       return user;
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        "Failed to get user by id",
-        StatusCode.InternalServerError
-      );
+      logger.error(`An error occurred while get user by id. Errror ${error}`);
+      throw error;
     }
   }
   public deleteUser(userId: string) {
     try {
       return this.userRepository.softDelete(userId);
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        "Failed to delete user",
-        StatusCode.InternalServerError
-      );
+      logger.error(`An error occurred while delete user. Errror ${error}`);
+      throw error;
     }
   }
 }

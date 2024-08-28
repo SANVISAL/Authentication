@@ -1,7 +1,8 @@
 import { HealthService } from "@AUTH/services/health.service";
-import { Get, Route } from "tsoa";
+import { Get, Route, Tags } from "tsoa";
 
 @Route("/api/v1")
+@Tags("Health")
 export class HealthController {
   constructor(private readonly healthService: HealthService) {}
   @Get("/health")

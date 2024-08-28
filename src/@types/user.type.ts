@@ -12,3 +12,18 @@ export interface IUserResponse extends IUser {
   id: string;
 }
 
+export interface ICreateUser extends IUser {
+  id: string;
+  role: string;
+}
+
+export interface LoginInfor {
+  email: string;
+  password: string;
+}
+
+export interface IUpdateUser {
+  firstName: string;
+  lastName: string;
+  gender: Gender;
+}

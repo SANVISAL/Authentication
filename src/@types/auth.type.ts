@@ -29,7 +29,7 @@ export interface TokenPayload extends JwtPayload {
 }
 
 export interface DecodeUser {
-  userid?: string;
+  userId?: string;
   roles?: string[];
   scopes?: any[];
 }
