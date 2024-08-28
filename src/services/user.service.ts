@@ -44,4 +44,11 @@ export class UserService {
       throw error;
     }
   }
+  public async deleteProfile(userId: string) {
+    try {
+      return await this.userRepository.softDelete(userId);
+    } catch (error) {
+      throw error;
+    }
+  }
 }

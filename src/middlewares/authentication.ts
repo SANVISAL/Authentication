@@ -54,10 +54,11 @@ export const expressAuthentication = async (
         StatusCode.Forbidden
       );
     }
-    return {
-      userId: decoded.sub,
-      roles,
-      scopes: uniqueScopes,
-    };
+    (request as RequestWithUser).user = {
+      //+
+      userId: decoded.sub, //+
+      roles, //+
+      scopes: uniqueScopes, //+
+    }; //
   }
 };

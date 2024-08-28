@@ -5,8 +5,8 @@
 // import router from "./auth.route";
 // import { logger } from "@AUTH/utils/logger";
 
-// // const user: Router = Router();
-// // const UserController = AppContainer.getUserController();
+// const user: Router = Router();
+// const UserController = AppContainer.getUserController();
 
 // user.get(
 //   routePath.PROFILE,

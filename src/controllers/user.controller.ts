@@ -31,12 +31,16 @@ export class UserController implements IUserController {
   @Security("jwt", ["read:profile"])
   @Get(routePath.PROFILE)
   public async getProfile(
-    @Request() req: Express.Request
+    @Request() req: RequestWithUser
   ): Promise<SuccessResponse<UserProfileDTO>> {
+    console.log("hello")
     try {
-      const userId = (req as RequestWithUser).user?.userId as string;
+      // const userId = (req as RequestWithUser).user?.userId as string;
+      const { userId } = req.user!;
+      console.log("hello");
+      console.log("userID:", userId);
 
-      const profile = await this.userService.getProfile(userId);
+      const profile = await this.userService.getProfile(userId!);
 
       const userDto = new UserProfileDTO(
         profile.firstName,

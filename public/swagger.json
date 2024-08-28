@@ -674,7 +674,7 @@
 				]
 			}
 		},
-		"/api/v1/users/profile": {
+		"/api/v1/profile": {
 			"get": {
 				"operationId": "GetProfile",
 				"responses": {
@@ -702,7 +702,7 @@
 				"parameters": []
 			}
 		},
-		"/api/v1/users/update": {
+		"/api/v1/update": {
 			"put": {
 				"operationId": "UpdateProfile",
 				"responses": {

@@ -9,6 +9,6 @@ export const routePath = {
   GETBYID: "/users/:userId",
   UPDATEBYID: "/users/:userId/update",
   DELETEBYID: "/users/:userId/delete",
-  PROFILE: "users/profile",
-  UPDATE: "users/update",
+  PROFILE: "/profile",
+  UPDATE: "/update",
 };
