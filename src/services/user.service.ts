@@ -1,33 +1,32 @@
+import { IUpdateUser } from "@AUTH/@types/user.type";
 import { UserRepository } from "@AUTH/database/repositories/user.repository";
 import { StatusCode } from "@AUTH/utils/consts";
 import { HttpException } from "@AUTH/utils/http-exception";
+import { logger } from "@AUTH/utils/logger";
 
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
   public async getProfile(userId: string) {
     try {
-      console.log("userId: ", userId);
       const profile = await this.userRepository.findById(userId);
       if (!profile) {
-        throw new HttpException("Not Found", StatusCode.NotFound);
+        throw new HttpException("Not Found user.", StatusCode.NotFound);
       }
       return profile;
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        "Fail To Get Profile",
-        StatusCode.InternalServerError
-      );
+      logger.error(`An error occurred while get profile user. Errror ${error}`);
+      throw error;
     }
   }
-  public async updateProfile(userId: string, updatedUser: any) {
+  public async updateProfile(
+    userId: string,
+    updatedUser: Partial<IUpdateUser>
+  ) {
     try {
       const user = await this.userRepository.findById(userId);
       if (!user) {
-        throw new HttpException("User not found.", StatusCode.NotFound);
+        throw new HttpException("Not Found User!.", StatusCode.NotFound);
       }
       const updateUser = await this.userRepository.updateById(
         user.id,
@@ -41,13 +40,8 @@ export class UserService {
       }
       return updateUser;
     } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException(
-        "Fail To Update Profile",
-        StatusCode.InternalServerError
-      );
+      logger.error(`An error occurred while get profile user. Errror ${error}`);
+      throw error;
     }
   }
 }

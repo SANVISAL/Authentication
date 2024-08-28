@@ -21,3 +21,9 @@ export interface LoginInfor {
   email: string;
   password: string;
 }
+
+export interface IUpdateUser {
+  firstName: string;
+  lastName: string;
+  gender: Gender;
+}

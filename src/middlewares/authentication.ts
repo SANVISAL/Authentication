@@ -14,7 +14,7 @@ export const expressAuthentication = async (
   request: Request,
   securityName: string,
   requiredScopes?: string[]
-): Promise<DecodeUser> => {
+): Promise<any> => {
   if (securityName !== "jwt") {
     throw new ApiError("Security name not supported.", StatusCode.BadRequest);
   }
@@ -28,7 +28,7 @@ export const expressAuthentication = async (
   }
 
   const tokenService = new TokenService();
-  let decoded: DecodeUser;
+  let decoded;
 
   try {
     decoded = await tokenService.verifyToken(token);
@@ -44,13 +44,6 @@ export const expressAuthentication = async (
 
   const userScopes = roles.flatMap((role) => RoleScopes[role] || []);
   const uniqueScopes = Array.from(new Set(userScopes));
-
-  (request as RequestWithUser).user = {
-    ...decoded,
-    roles,
-    scopes: uniqueScopes,
-  };
-
   if (requiredScopes) {
     const hasRequiredScopes = requiredScopes.every((scope) =>
       uniqueScopes.includes(scope)
@@ -61,7 +54,10 @@ export const expressAuthentication = async (
         StatusCode.Forbidden
       );
     }
+    return {
+      userId: decoded.sub,
+      roles,
+      scopes: uniqueScopes,
+    };
   }
-
-  return decoded;
 };
