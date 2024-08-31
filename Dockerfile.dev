@@ -1,0 +1,24 @@
+# Use the Node.js 21 image with Alpine 3.18 as the base image
+FROM node:21-alpine3.18
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy package.json and yarn.lock first to leverage Docker's cache
+COPY package.json yarn.lock ./
+
+# Install dependencies and nodemon globally
+RUN yarn install && yarn global add nodemon
+
+# Copy the rest of the source code and necessary files
+COPY tsconfig.json ./
+COPY src ./src
+COPY privateKey.pem ./
+COPY publicKey.pem ./
+# COPY .env ./ (Uncomment if you have a .env file)
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Set the default command to start the application
+CMD ["yarn", "run", "start:dev"]

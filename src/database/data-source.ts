@@ -12,7 +12,7 @@ export class AppDataSource {
       name: "default",
       type: "postgres",
       host: this._config.host,
-      port: parseInt(this._config.dbport || "5432", 10), // Default to 5432 for PostgreSQL
+      port: parseInt(this._config.dbport || "7000", 10), // Default to 5432 for PostgreSQL
       username: this._config.username,
       password: this._config.password,
       database: this._config.database,

@@ -3,13 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "scripts": {  
+  "scripts": {
     "start:dev": "cross-env NODE_ENV=development nodemon -r tsconfig-paths/register --legacy-watch  src/server.ts",
     "start": "pm2 start ecosystem.config.js",
     "stop": "pm2 stop all",
     "restart": "pm2 restart ecosystem.config.js",
     "delete": "pm2 delete all",
     "gen:spec": "tsoa spec",
+    "docker-build": "docker-compose up --build",
+    "docker-start": "docker-compose up",
+    "docker-stop": "docker-compose down",
     "gen:routes": "tsoa routes",
     "gen:all": "yarn gen:spec && yarn gen:routes",
     "build": "tsc --project tsconfig.json && tsc-alias -p tsconfig.json && cp package.json ./build/&& cp -R configs ./build/ && cp ecosystem.config.js ./build/",
