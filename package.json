@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "scripts": {
+  "scripts": {  
     "start:dev": "cross-env NODE_ENV=development nodemon -r tsconfig-paths/register --legacy-watch  src/server.ts",
     "start": "pm2 start ecosystem.config.js",
     "stop": "pm2 stop all",
